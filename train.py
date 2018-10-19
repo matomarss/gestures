@@ -6,10 +6,10 @@ import numpy as np
 
 def create_callbacks():
     callbacks = []
-    checkpoint = keras.callbacks.ModelCheckpoint('snapshots/gestures_{epoch:02d}-{val_loss:.2f}.hdf5', verbose=1)
+    checkpoint = keras.callbacks.ModelCheckpoint('snapshots/gestures_{epoch:02d}-{val_loss:.2f}-{val_accuracy:.2f}.hdf5', verbose=1)
     callbacks.append(checkpoint)
 
-    tb_callback = keras.callbacks.TensorBoard(log_dir='./logs/run_4')
+    tb_callback = keras.callbacks.TensorBoard(log_dir='./logs/run_1')
     callbacks.append(tb_callback)
 
     reduce_lr = keras.callbacks.ReduceLROnPlateau(monitor='val_loss', factor=0.2, patience=6, min_lr = 0.00001)
