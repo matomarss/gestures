@@ -6,7 +6,7 @@ import numpy as np
 
 def create_callbacks():
     callbacks = []
-    checkpoint = keras.callbacks.ModelCheckpoint('snapshots/gestures_{epoch:02d}-{val_loss:.2f}-{val_accuracy:.2f}.hdf5', verbose=1)
+    checkpoint = keras.callbacks.ModelCheckpoint('snapshots/gestures_{epoch:02d}-{val_loss:.2f}-{val_acc:.2f}.hdf5', verbose=1)
     callbacks.append(checkpoint)
 
     tb_callback = keras.callbacks.TensorBoard(log_dir='./logs/run_1')
