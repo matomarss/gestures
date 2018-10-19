@@ -6,7 +6,7 @@ import numpy as np
 import loader
 
 if __name__ == '__main__':
-    model_path = 'snapshots/gestures_03-0.66.hdf5'
+    model_path = 'snapshots/gestures_04-0.60-0.81.hdf5'
     model = keras.models.load_model(model_path)
 
     dataset_path = 'D:/Skola/PhD/data/gesture_dataset_2018_09_18/dataset/'
