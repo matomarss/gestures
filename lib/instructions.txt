@@ -1,0 +1,12 @@
+To use see: https://developer-archive.leapmotion.com/documentation/python/devguide/Project_Setup.html
+
+To build the pyd follow these instructions: https://support.leapmotion.com/hc/en-us/articles/360004362237
+
+- Install Visual Studio (any of 2008, 2010, or 2012 should be fine), Python 3.3.0 for Windows x86, and swig-2.0.9.
+- Create an empty C++ project. Copy Leap.h, LeapMath.h, Leap.i, and Leap.lib (x86) into this project folder.
+- From that folder, run SWIG to generate LeapPython.cpp. For example: c:\leap_python33>"C:\Program Files (x86)\swigwin-2.0.9\swig.exe" -c++ -python -o LeapPython.cpp -interface LeapPython Leap.i
+- Open up the project properties, select the Release configuration, and go to the Configuration Properties -> General page. From there, set the 'Target Name' to LeapPython and set the 'Configuration Type' to 'Dynamic Library (.dll)'. (screenshot)
+- Go to to the C/C++ -> General property page. Add the path containing Python.h, typically C:\Python33\include. (screenshot)
+- Go to the Linker -> Input property page. Add Leap.lib and the full path to python33.lib, typically C:\Python33\libs\python33.lib. (screenshot)
+- Press F7 to build. (If you hit errors such as missing symbols, this tends to come from accidentally omitting one library or mixing x86 with x64. Double-check that you have the correct Leap.lib and python33.lib (from 32-bit Python) and are building a Win32 configuration.)
+- Rename the output LeapPython.dll to LeapPython.pyd
