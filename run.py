@@ -1,3 +1,4 @@
+import argparse
 import sys
 
 import cv2
@@ -8,6 +9,13 @@ from utils import undistort, convert_distortion_maps, finger_names, process_fram
 
 sys.path.insert(0, "./lib")
 from lib import Leap
+
+def parse_args():
+    parser = argparse.ArgumentParser()
+    parser.add_argument('-n', '--num_frames', type=int, default=10, help='How many frames to use')
+    args = parser.parse_args()
+    return args
+
 
 def main(n):
     controller = Leap.Controller()
@@ -23,11 +31,16 @@ def main(n):
         if len(dictionary) > 0:
             frame_list = frame_list_from_dict(dictionary)
 
-            feature_array[:n - 1] = feature_array[1:]
-            feature_array[n - 1] = np.array(frame_list)
+            if n == 1:
+                feature_array = np.array(frame_list)
+            else:
+                feature_array[:n - 1] = feature_array[1:]
+                feature_array[n - 1] = np.array(frame_list)
 
-            prediction = pipeline.predict(feature_array.reshape(1, -1))
-            print(INV_LABELS_DICT[prediction[0]])
+            prediction = pipeline.predict_proba(feature_array.reshape(1, -1))
+            print("Probabilities: ", " ".join(["{}: {:04f}, ".format(INV_LABELS_DICT[i], j) for i, j in enumerate(prediction[0])]))
+            print("Best gesture:", INV_LABELS_DICT[np.argmax(prediction[0])])
 
 if __name__ == '__main__':
-    main(10)
+    args = parse_args()
+    main(args.num_frames)
