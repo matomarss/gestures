@@ -30,7 +30,7 @@ import os, argparse
 import json
 import numpy as np
 
-from utils import LABELS_DICT
+from utils import LABELS_DICT, frame_list_from_dict
 
 
 def parse_args():
@@ -49,11 +49,8 @@ def flatten_features(features):
     feature_array = []
 
     for dictionary in features:
-        if len(dictionary) > 0:
-
-
-            feature_array.append(frame_list)
-
+        frame_list = frame_list_from_dict(dictionary)
+        feature_array.append(frame_list)
 
     return np.array(feature_array)
 
