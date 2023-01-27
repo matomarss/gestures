@@ -24,12 +24,8 @@ from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
 def dump_to_json(path, filename, data):
     path = os.path.join(path, filename) + ".json"
-    if os.path.exists(path):
-        with open(path, "a") as f:
-            json.dump(data, f, indent=4)
-    else:
-        with open(path, "w") as f:
-            json.dump(data, f, indent=4)
+    with open(path, "w") as f:
+        json.dump(data, f, indent=4)
 
 
 def load_from_json(path, filename):

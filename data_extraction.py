@@ -141,3 +141,41 @@ def load_pca_test_results(n, mod):
 
     return final
 
+
+def load_kernel_test_results():
+    results = load_from_json("test_svm_kernels", "SVM_kernel_test_n=20")
+    processed_results = {}
+    for kernel in results.keys():
+        for rec in results.get(kernel):
+            compound = ""
+            for key in rec.keys():
+                if key != "validation_accuracy":
+                    compound += "&"+key
+            processed_results[kernel][compound] = rec["validation_accuracy"]
+    return processed_results
+
+
+def load_hyper_parameter_test_results(mod):
+    results = {}
+    direc = "test_hyper_parameters"
+    for n in [1, 10, 20, 40]:
+        filename = mod.get_name() + "_hyper_par_test_n=" + str(n)
+        data = load_from_json(direc, filename)
+        results[n] = data.get("best_parameters").get("best_score")
+    return results
+
+
+def load_preprocessing_and_scaler_table_data(mod, n, pca):
+    res = load_pca_test_results(n, mod)
+
+    if pca == "all":
+        pca = n*18
+    if pca is None:
+        pca = -1
+    ld = {}
+    for prep in ["None", "center_norm"]:
+        ld[prep] = {}
+        for rec in res.get(pca):
+            if prep == rec.get("preprocessing"):
+                ld[prep][rec.get("scaler")] = rec.get("validation_accuracy")
+    return ld

@@ -3,6 +3,7 @@ from mpl_toolkits import mplot3d
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
+from tabulate import tabulate
 
 
 def parse_args():
@@ -130,6 +131,35 @@ def create_pca_test_graphs(data):
         plt.ylabel("Best accuracy acquired")
         plt.legend()
         plt.show()
+
+
+def create_hyper_parameter_test_graph(data):
+    x = []
+    y = []
+
+    plt.title("Graph of the best acquired accuracy for every sequence length")
+    for n in data.keys():
+        x.append(int(n))
+        val_acc = data.get(n)
+        y.append(val_acc)
+
+    plt.scatter(x, y, color="red")
+    plt.plot(x, y, color="red")
+
+    plt.xticks(x, x)
+    plt.xlabel("Sequence length")
+    plt.ylabel("Best accuracy acquired")
+    plt.show()
+
+
+def get_table(data):
+    # Extract the columns name and values
+    cols = list(data.values())[0].keys()
+    rows = data.keys()
+
+    # Prepare the data in a tabular format
+    tabular_data = [[data[row][col] for col in cols] for row in rows]
+    print(tabulate(tabular_data, headers=cols, tablefmt='latex'))
 
 
 if __name__ == '__main__':
