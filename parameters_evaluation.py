@@ -23,8 +23,8 @@ from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
 from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond
 from files_organization import dump_to_json, dump_object
-from data_extraction import find_best_result, load_pca_test_results
-from data_visualisation import create_pca_test_graphs
+from data_extraction import find_best_result, load_pca_test_results, load_kernel_test_results, load_hyper_parameter_test_results, load_preprocessing_and_scaler_table_data
+from data_visualisation import create_pca_test_graphs, create_hyper_parameter_test_graph, get_table
 
 
 def test_svm_kernels(root_path):
@@ -33,8 +33,8 @@ def test_svm_kernels(root_path):
     results = {"linear": [], "poly": [], "rbf": []}
     for preprocessing in [None, "center_norm"]:
         for scaler in [MinMaxScaler(), StandardScaler()]:
-            model, res, best = train_and_evaluate(
-                SvmModel({'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
+            res, best = train_and_evaluate(
+                SvmModel({'svc__C': [8], 'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
                 preprocessing=preprocessing, scaler=scaler, use_pca=True, cv=5, pca_n_components_to_try=[42, 20*18])
 
             for i in range(6):
@@ -50,7 +50,7 @@ def test_svm_kernels(root_path):
 
     for preprocessing in [None, "center_norm"]:
         for scaler in [MinMaxScaler(), StandardScaler(), None]:
-            model, res, best = train_and_evaluate(SvmModel({'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
+            res, best = train_and_evaluate(SvmModel({'svc__C': [8], 'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
                                                   preprocessing=preprocessing, scaler=scaler, use_pca=False, cv=5)
             for i in range(3):
                 record = {
@@ -65,7 +65,7 @@ def test_svm_kernels(root_path):
     dump_to_json("test_svm_kernels", "SVM_kernel_test_n=20", results)
 
 
-def find_the_number_of_important_components(root_path, n):
+def find_the_number_of_important_components(root_path, n, threshold):
     data, y = load_data(root_path=root_path, cond=true_cond, preprocessing=None, n=n)
 
     # Perform PCA
@@ -79,18 +79,15 @@ def find_the_number_of_important_components(root_path, n):
     plt.bar(range(len(explained_variance)), explained_variance)
     plt.xlabel("Principal Component")
     plt.ylabel("Explained Variance Ratio")
-    plt.show()
+    # plt.show()
 
     # Find the number of reasonably important principal components
     cumulative_explained_variance = np.cumsum(explained_variance)
 
-    # Set the threshold for the explained variance ratio
-    threshold = 0.99
-
     # Find the number of principal components that exceed the threshold
     num_components = np.where(cumulative_explained_variance > threshold)[0][0] + 1
-    print("Number of reasonably important principal components for n = {}:".format(n), num_components)
-    print(np.where(cumulative_explained_variance > threshold))
+    #print("Number of reasonably important principal components for n = {}:".format(n), num_components)
+    #print(np.where(cumulative_explained_variance > threshold))
     return num_components
 
 
@@ -112,7 +109,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
         # Test the values for every combination of preprocessing and scaling
         for preprocessing in [None, "center_norm"]:
             for scaler in [MinMaxScaler(), StandardScaler()]:
-                model1, res1, best1 = train_and_evaluate(model, root_path, n=n, preprocessing=preprocessing,
+                res1, best1 = train_and_evaluate(model, root_path, n=n, preprocessing=preprocessing,
                                                          scaler=scaler, use_pca=True, cv=5,
                                                          pca_n_components_to_try=pca_n_components_to_try)
                 ln = len(pca_n_components_to_try)
@@ -130,7 +127,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
                     if res1["param_pca__n_components"][i] == n * 18:
                         dictPCA["all"].append(data)
                     else:
-                        dictPCA[res1["param_pca__n_components"][i]].append(data)
+                        dictPCA[int(res1["param_pca__n_components"][i])].append(data)
         filename = model.get_name() + "test_with_PCA_n=" + str(n)
         dump_to_json(dir, filename, dictPCA)
     # Test with PCA NOT used
@@ -138,7 +135,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
         dictNOPCA = {"NO_PCA": []}
         for preprocessing in [None, "center_norm"]:
             for scaler in [MinMaxScaler(), StandardScaler(), None]:
-                model2, res2, best2 = train_and_evaluate(model, root_path, n=n, preprocessing=preprocessing,
+                res2, best2 = train_and_evaluate(model, root_path, n=n, preprocessing=preprocessing,
                                                          scaler=scaler, use_pca=False, cv=5)
                 data = {
                     "{}".format("C" if "param_svc__C" in res2.keys() else "max_depth"): "{}".format(
@@ -155,7 +152,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
 
 
 def test_hyper_parameters(mod, root_path, n, preprocessing, scaler, use_pca, n_components):
-    model, cv_res, best_result = train_and_evaluate(mod, root_path, preprocessing=preprocessing, n=n, use_pca=use_pca,
+    cv_res, best_result = train_and_evaluate(mod, root_path, preprocessing=preprocessing, n=n, use_pca=use_pca,
                                                    pca_n_components_to_try=[n_components], scaler=scaler, cv=5)
     iterations = len(mod.get_hyper_parameters().get("svc__C" if "param_svc__C" in cv_res.keys() else
                                                     "randomforestclassifier__max_depth")) * \
@@ -187,7 +184,7 @@ def test_hyper_parameters(mod, root_path, n, preprocessing, scaler, use_pca, n_c
         os.makedirs(dir)
     filename = mod.get_name() + "_hyper_par_test_n=" + str(n)
     dump_to_json(dir, filename, data)
-    dump_object(dir, filename, model)
+    #dump_object(dir, filename, model)
 
 
 if __name__ == '__main__':
@@ -195,20 +192,28 @@ if __name__ == '__main__':
     rel_path = "gestures\prepped"
     path = os.path.join(abs_path, rel_path)
 
-    test_svm_kernels(path)
+    #test_svm_kernels(path)
 
-    # find_the_number_of_important_components(path, 1)
-    # find_the_number_of_important_components(path, 10)
-    #find_the_number_of_important_components(path, 20)
-    # find_the_number_of_important_components(path, 40)
-
+    n_comp1 = []
+    n_comp10 = []
+    n_comp20 = []
+    n_comp40 = []
+    for threshold in [0.5, 0.8, 0.9, 0.95, 0.98, 0.99]:
+        n_comp1.append(find_the_number_of_important_components(path, 1, threshold))
+        n_comp10.append(find_the_number_of_important_components(path, 10, threshold))
+        n_comp20.append(find_the_number_of_important_components(path, 20, threshold))
+        n_comp40.append(find_the_number_of_important_components(path, 40, threshold))
+    print(n_comp1)
+    print(n_comp10)
+    print(n_comp20)
+    print(n_comp40)
     # 99% 1: 12, 10: 62, 20: 116, 40: 223
     # 98% 1: 11, 10: 44, 20: 79, 40: 150
     # 97% 1: 9, 10: 34, 20: 61, 40: 113
-    # test_pca(path, 1, [1, 9, 11, 12])
-    # test_pca(path, 10, [1, 34, 44, 62])
-    # test_pca(path, 20, [1, 61, 79, 116])
-    # test_pca(path, 40, [1, 113, 150, 223])
+    test_pca(path, 1, n_comp1)
+    test_pca(path, 10, n_comp10)
+    test_pca(path, 20, n_comp20)
+    test_pca(path, 40, n_comp40)
 
     #print(find_best_result(SvmModel({})))
     #print(find_best_result(RFModel({})))
@@ -238,5 +243,10 @@ if __name__ == '__main__':
     # print(res_svm40)
     #test_hyper_parameters(RFModel({'randomforestclassifier__n_estimators': [100,300,500], 'randomforestclassifier__max_depth': [50,100,300]}), path, 20, "center_norm", StandardScaler(), True, 116)
     #test_hyper_parameters(SvmModel({'svc__C': [math.pow(2, 3),  math.pow(2, 7),  math.pow(2, 11)], 'svc__gamma': [math.pow(2, 3),  math.pow(2, -3),  math.pow(2, -9), math.pow(2, -15)]}), path, 20, None, StandardScaler(), True, 20*18)
+
+    #create_hyper_parameter_test_graph(load_hyper_parameter_test_results(SvmModel({})))
+    #print(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
+    #get_table(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
+
 
 

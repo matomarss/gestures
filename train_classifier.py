@@ -270,10 +270,6 @@ def true_cond(x):
     return True
 
 
-def pca_n_components_to_try(data):
-    return [5, 15, 40, len(data[0])-1]
-
-
 def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=None, pca_n_components_to_try=None):
     print(f"---Training {mod.get_name()} classifier---")
     print(f"Preprocessing = {preprocessing}")
@@ -324,22 +320,22 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 
         print(f"->{name} = {best_val}")
 
-    print("Fitting of the best model in progress...")
-    got_model = mod.get_model(best_params)
+    # print("Fitting of the best model in progress...")
+    # got_model = mod.get_model(best_params)
+    #
+    # pipeline = make_pipeline(scaler, pca, got_model)
+    # pipeline.fit(train_X, train_y)
+    #
+    # test_predict = pipeline.predict(test_X)
+    #
+    # acc = accuracy_score(test_y, test_predict)
+    # cm = confusion_matrix(test_y, test_predict)
+    #
+    # print("Accuracy of the best model: {}".format(acc))
+    # print("Confusion matrix of the best model:")
+    # print(cm)
 
-    pipeline = make_pipeline(scaler, pca, got_model)
-    pipeline.fit(train_X, train_y)
-
-    test_predict = pipeline.predict(test_X)
-
-    acc = accuracy_score(test_y, test_predict)
-    cm = confusion_matrix(test_y, test_predict)
-
-    print("Accuracy of the best model: {}".format(acc))
-    print("Confusion matrix of the best model:")
-    print(cm)
-
-    return pipeline, search.cv_results_, [search.best_params_, search.best_score_]
+    return search.cv_results_, [search.best_params_, search.best_score_]
 
 
         # if not os.path.exists('models'):
