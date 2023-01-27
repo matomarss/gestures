@@ -302,7 +302,7 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
     hyp_params = mod.get_hyper_parameters()
     if use_pca:
         if pca_n_components_to_try is None:
-            hyp_params["pca__n_components"] = [len(train_X[0]) - 1]
+            hyp_params["pca__n_components"] = [len(train_X[0])]
         else:
             hyp_params["pca__n_components"] = pca_n_components_to_try
 

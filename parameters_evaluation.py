@@ -30,36 +30,39 @@ from data_visualisation import create_pca_test_graphs
 def test_svm_kernels(root_path):
     if not os.path.exists('test_svm_kernels'):
         os.makedirs('test_svm_kernels')
+    results = {"linear": [], "poly": [], "rbf": []}
+    for preprocessing in [None, "center_norm"]:
+        for scaler in [MinMaxScaler(), StandardScaler(), None]:
+            model, res, best = train_and_evaluate(
+                SvmModel({'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
+                preprocessing=preprocessing, scaler=scaler, use_pca=True, cv=5, pca_n_components_to_try=[42, 20*18])
+
+            for i in range(6):
+                record = {
+                    "preprocessing": str(preprocessing),
+                    "scaler": str(scaler),
+                    "pca": res["param_pca__n_components"][i],
+                    "validation_accuracy": res["mean_test_score"][i]
+                }
+                results[res["param_svc__kernel"][i]].append(record)
+
+                print(record)
 
     for preprocessing in [None, "center_norm"]:
         for scaler in [MinMaxScaler(), StandardScaler(), None]:
-            model1, res1, best1 = train_and_evaluate(
-                SvmModel({'svc__C': [math.pow(2, 3)], 'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
-                preprocessing=preprocessing,
-                scaler=scaler, use_pca=True, cv=5, pca_n_components_to_try=None)
-            model2, res2, best2 = train_and_evaluate(
-                SvmModel({'svc__C': [math.pow(2, 3)], 'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
-                preprocessing=preprocessing,
-                scaler=scaler, use_pca=False, cv=5, pca_n_components_to_try=None)
+            model, res, best = train_and_evaluate(SvmModel({'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
+                                                  preprocessing=preprocessing, scaler=scaler, use_pca=False, cv=5)
             for i in range(3):
-                data1 = {
+                record = {
                     "preprocessing": str(preprocessing),
                     "scaler": str(scaler),
-                    "kernel": str(res1["param_svc__kernel"][i]),
-                    "validation_accuracy": res1["mean_test_score"][i]
+                    "pca": "None",
+                    "validation_accuracy": res["mean_test_score"][i]
                 }
-                print(res1["param_svc__kernel"][i])
-                print(res1["mean_test_score"][i])
-                data2 = {
-                    "preprocessing": str(preprocessing),
-                    "scaler": str(scaler),
-                    "kernel": str(res2["param_svc__kernel"][i]),
-                    "validation_accuracy": res2["mean_test_score"][i]
-                }
-                dump_to_json("test_svm_kernels", "SVMkerneltest_n=20_pcaALL", data1)
-                dump_to_json("test_svm_kernels", "SVMkerneltest_n=20_NOpca", data2)
-            dump_object("test_svm_kernels", "SVM_kerneltest_n=20_pcaALL", model1)
-            dump_object("test_svm_kernels", "SVMkerneltest_n=20_NOpca", model2)
+                results[res["param_svc__kernel"][i]].append(record)
+
+                print(record)
+    dump_to_json("test_svm_kernels", "SVM_kernel_test_n=20", results)
 
 
 def find_the_number_of_important_components(root_path, n):
@@ -82,7 +85,7 @@ def find_the_number_of_important_components(root_path, n):
     cumulative_explained_variance = np.cumsum(explained_variance)
 
     # Set the threshold for the explained variance ratio
-    threshold = 0.97
+    threshold = 0.99
 
     # Find the number of principal components that exceed the threshold
     num_components = np.where(cumulative_explained_variance > threshold)[0][0] + 1
@@ -191,11 +194,12 @@ if __name__ == '__main__':
     abs_path = os.path.abspath("..")
     rel_path = "gestures\prepped"
     path = os.path.join(abs_path, rel_path)
-    # test_svm_kernels(os.path.join(abs_path, rel_path))
+
+    test_svm_kernels(path)
 
     # find_the_number_of_important_components(path, 1)
     # find_the_number_of_important_components(path, 10)
-    # find_the_number_of_important_components(path, 20)
+    #find_the_number_of_important_components(path, 20)
     # find_the_number_of_important_components(path, 40)
 
     # 99% 1: 12, 10: 62, 20: 116, 40: 223
@@ -208,22 +212,22 @@ if __name__ == '__main__':
 
     #print(find_best_result(SvmModel({})))
     #print(find_best_result(RFModel({})))
-    res_rf1 = load_pca_test_results(1, RFModel({}))
-    res_rf10 = load_pca_test_results(10, RFModel({}))
-    res_rf20 = load_pca_test_results(20, RFModel({}))
-    res_rf40 = load_pca_test_results(40, RFModel({}))
-    res_svm1 = load_pca_test_results(1, SvmModel({}))
-    res_svm10 = load_pca_test_results(10, SvmModel({}))
-    res_svm20 = load_pca_test_results(20, SvmModel({}))
-    res_svm40 = load_pca_test_results(40, SvmModel({}))
-    create_pca_test_graphs(res_rf1)
-    create_pca_test_graphs(res_rf10)
-    create_pca_test_graphs(res_rf20)
-    create_pca_test_graphs(res_rf40)
-    create_pca_test_graphs(res_svm1)
-    create_pca_test_graphs(res_svm10)
-    create_pca_test_graphs(res_svm20)
-    create_pca_test_graphs(res_svm40)
+    # res_rf1 = load_pca_test_results(1, RFModel({}))
+    # res_rf10 = load_pca_test_results(10, RFModel({}))
+    # res_rf20 = load_pca_test_results(20, RFModel({}))
+    # res_rf40 = load_pca_test_results(40, RFModel({}))
+    # res_svm1 = load_pca_test_results(1, SvmModel({}))
+    # res_svm10 = load_pca_test_results(10, SvmModel({}))
+    # res_svm20 = load_pca_test_results(20, SvmModel({}))
+    # res_svm40 = load_pca_test_results(40, SvmModel({}))
+    # create_pca_test_graphs(res_rf1)
+    # create_pca_test_graphs(res_rf10)
+    # create_pca_test_graphs(res_rf20)
+    # create_pca_test_graphs(res_rf40)
+    # create_pca_test_graphs(res_svm1)
+    # create_pca_test_graphs(res_svm10)
+    # create_pca_test_graphs(res_svm20)
+    # create_pca_test_graphs(res_svm40)
     # print(res_rf1)
     # print(res_rf10)
     # print(res_rf20)
