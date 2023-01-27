@@ -40,10 +40,96 @@ def visualize(file_path):
 
     plt.show()
 
+
 def show_targets(file_path):
     data = np.load(file_path)
     targets = data['targets']
     print(targets)
+
+
+def create_pca_test_graph_average(accuracies):
+    x = []
+    y = []
+    accuracies = dict(sorted(accuracies.items()))
+    for point in accuracies.keys():
+        if point == -1 or point == -2:
+            pass
+        else:
+            x.append(int(point))
+            y.append(accuracies.get(point))
+    plt.scatter(x, y)
+    plt.plot(x, y)
+
+    plt.axhline(y=accuracies.get(-1), color='r', linestyle='-')
+    plt.axhline(y=accuracies.get(-2), color='g', linestyle='-')
+    plt.show()
+
+
+def create_pca_best_test_graph(accuracies):
+    x = []
+    y = []
+    accuracies = dict(sorted(accuracies.items()))
+    for point in accuracies.keys():
+        if point == -1:
+            pass
+        else:
+            x.append(int(point))
+            y.append(accuracies.get(point))
+    plt.scatter(x, y)
+    plt.plot(x, y, label="With PCA")
+
+    plt.xticks(x, x)
+    plt.xlabel("Number of components left after PCA")
+    plt.ylabel("Best accuracy acquired")
+
+    plt.axhline(y=accuracies.get(-1), color='r', linestyle='-', label="Without PCA")
+    plt.legend()
+    plt.show()
+
+
+def create_pca_test_graphs(data):
+    for prep in ["None", "center_norm"]:
+        x = []
+        y_stand = []
+        y_minmax = []
+        plt.clf()
+        if prep == "None":
+            plt.title("Without additional preprocessing")
+        elif prep == "center_norm":
+            plt.title("With central-normalized preprocessing")
+        for point in data.keys():
+            if point == -1:
+                pass
+            else:
+                x.append(int(point))
+                records = data.get(point)
+                for rec in records:
+                    if rec.get("preprocessing") == prep:
+                        if rec.get("scaler") == "StandardScaler()":
+                            y_stand.append(rec.get("validation_accuracy"))
+                        elif rec.get("scaler") == "MinMaxScaler()":
+                            y_minmax.append(rec.get("validation_accuracy"))
+
+        plt.scatter(x, y_stand, color="orange", label="With PCA and standard scaler")
+        #plt.plot(x, y_stand, color="green", label="With PCA and standard scaler")
+        plt.scatter(x, y_minmax, color="green", label="With PCA and minmax scaler")
+        #plt.plot(x, y_minmax, color="orange", label="With PCA and minmax scaler")
+
+        records = data.get(-1)
+        for rec in records:
+            if rec.get("preprocessing") == prep:
+                if rec.get("scaler") == "StandardScaler()":
+                    plt.axhline(y=rec.get("validation_accuracy"), color='orange', linestyle='-', label="Without PCA and with standard scaler")
+                elif rec.get("scaler") == "MinMaxScaler()":
+                    plt.axhline(y=rec.get("validation_accuracy"), color='green', linestyle='-', label="Without PCA and with minmax scaler")
+                elif rec.get("scaler") == "None":
+                    plt.axhline(y=rec.get("validation_accuracy"), color='black', linestyle='-', label="Without PCA and any scaler")
+
+        plt.xticks(x, x)
+        plt.xlabel("Number of components left after PCA")
+        plt.ylabel("Best accuracy acquired")
+        plt.legend()
+        plt.show()
 
 
 if __name__ == '__main__':

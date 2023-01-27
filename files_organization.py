@@ -32,6 +32,13 @@ def dump_to_json(path, filename, data):
             json.dump(data, f, indent=4)
 
 
+def load_from_json(path, filename):
+    path = os.path.join(path, filename) + ".json"
+    with open(path, "r") as f:
+        data = json.load(f)
+    return data
+
+
 def dump_object(path, filename, obj):
     path = os.path.join(path, filename) + ".joblib"
 
