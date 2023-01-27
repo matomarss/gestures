@@ -32,7 +32,7 @@ def test_svm_kernels(root_path):
         os.makedirs('test_svm_kernels')
     results = {"linear": [], "poly": [], "rbf": []}
     for preprocessing in [None, "center_norm"]:
-        for scaler in [MinMaxScaler(), StandardScaler(), None]:
+        for scaler in [MinMaxScaler(), StandardScaler()]:
             model, res, best = train_and_evaluate(
                 SvmModel({'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
                 preprocessing=preprocessing, scaler=scaler, use_pca=True, cv=5, pca_n_components_to_try=[42, 20*18])
@@ -185,7 +185,7 @@ def test_hyper_parameters(mod, root_path, n, preprocessing, scaler, use_pca, n_c
     dir = "test_hyper_parameters"
     if not os.path.exists(dir):
         os.makedirs(dir)
-    filename = mod.get_name() + "_hyper_par_test"
+    filename = mod.get_name() + "_hyper_par_test_n=" + str(n)
     dump_to_json(dir, filename, data)
     dump_object(dir, filename, model)
 
