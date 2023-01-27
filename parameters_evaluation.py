@@ -105,7 +105,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
         dictPCA = {"all": []}
         for n_comp in pca_n_components_to_try:
             if n_comp != n * 18:
-                dictPCA[n_comp] = []
+                dictPCA[int(n_comp)] = []
         # Test the values for every combination of preprocessing and scaling
         for preprocessing in [None, "center_norm"]:
             for scaler in [MinMaxScaler(), StandardScaler()]:
@@ -122,7 +122,7 @@ def test_pca(root_path, n, pca_n_components_to_try):
                         "scaler": str(scaler),
                         "validation_accuracy": res1["mean_test_score"][i]
                     }
-                    print(res1["param_pca__n_components"][i])
+                    print(int(res1["param_pca__n_components"][i]))
                     print(data)
                     if res1["param_pca__n_components"][i] == n * 18:
                         dictPCA["all"].append(data)
