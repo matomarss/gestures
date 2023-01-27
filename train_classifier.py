@@ -339,7 +339,7 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
     print("Confusion matrix of the best model:")
     print(cm)
 
-    return pipeline, search.cv_results_, search.best_score_
+    return pipeline, search.cv_results_, [search.best_params_, search.best_score_]
 
 
         # if not os.path.exists('models'):
