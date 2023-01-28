@@ -25,33 +25,32 @@ from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel
 from files_organization import dump_to_json, dump_object, load_from_json
 
 
-def find_best_result(mod):
+def find_best_result(mod, n):
     best_result = {"validation_accuracy": 0}
-    for n in [1, 10, 20, 40]:
-        direc = "test_pca_n=" + str(n)
-        filename_no_pca = mod.get_name() + "test_with_NO_PCA_n=" + str(n)
-        filename_pca = mod.get_name() + "test_with_PCA_n=" + str(n)
-        data = load_from_json(direc, filename_pca)
-        for n_comp in data.keys():
-            records = data[n_comp]
-            for i in range(len(records)):
-                val_acc = records[i].get("validation_accuracy")
-                if val_acc > best_result.get("validation_accuracy"):
-                    best_result["validation_accuracy"] = val_acc
-                    best_result["n"] = n
-                    best_result["preprocessing"] = records[i].get("preprocessing")
-                    best_result["scaler"] = records[i].get("scaler")
-                    best_result["pca"] = n_comp
-        data = load_from_json(direc, filename_no_pca)
-        records = data.get("NO_PCA")
-        for rec in records:
-            val_acc = rec.get("validation_accuracy")
+    direc = "test_pca_n=" + str(n)
+    filename_no_pca = mod.get_name() + "test_with_NO_PCA_n=" + str(n)
+    filename_pca = mod.get_name() + "test_with_PCA_n=" + str(n)
+    data = load_from_json(direc, filename_pca)
+    for n_comp in data.keys():
+        records = data[n_comp]
+        for i in range(len(records)):
+            val_acc = records[i].get("validation_accuracy")
             if val_acc > best_result.get("validation_accuracy"):
                 best_result["validation_accuracy"] = val_acc
                 best_result["n"] = n
-                best_result["preprocessing"] = rec.get("preprocessing")
-                best_result["scaler"] = rec.get("scaler")
-                best_result["pca"] = "None"
+                best_result["preprocessing"] = records[i].get("preprocessing")
+                best_result["scaler"] = records[i].get("scaler")
+                best_result["pca"] = n_comp
+    data = load_from_json(direc, filename_no_pca)
+    records = data.get("NO_PCA")
+    for rec in records:
+        val_acc = rec.get("validation_accuracy")
+        if val_acc > best_result.get("validation_accuracy"):
+            best_result["validation_accuracy"] = val_acc
+            best_result["n"] = n
+            best_result["preprocessing"] = rec.get("preprocessing")
+            best_result["scaler"] = rec.get("scaler")
+            best_result["pca"] = "None"
     return best_result
 
 
@@ -146,11 +145,12 @@ def load_kernel_test_results():
     results = load_from_json("test_svm_kernels", "SVM_kernel_test_n=20")
     processed_results = {}
     for kernel in results.keys():
+        processed_results[kernel] = {}
         for rec in results.get(kernel):
             compound = ""
             for key in rec.keys():
                 if key != "validation_accuracy":
-                    compound += "&"+key
+                    compound += "&"+str(rec.get(key))
             processed_results[kernel][compound] = rec["validation_accuracy"]
     return processed_results
 

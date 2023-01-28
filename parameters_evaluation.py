@@ -49,7 +49,7 @@ def test_svm_kernels(root_path):
                 print(record)
 
     for preprocessing in [None, "center_norm"]:
-        for scaler in [MinMaxScaler(), StandardScaler(), None]:
+        for scaler in [MinMaxScaler(), StandardScaler()]:
             res, best = train_and_evaluate(SvmModel({'svc__C': [8], 'svc__kernel': ["rbf", "linear", "poly"]}), root_path, n=20,
                                                   preprocessing=preprocessing, scaler=scaler, use_pca=False, cv=5)
             for i in range(3):
@@ -194,26 +194,26 @@ if __name__ == '__main__':
 
     #test_svm_kernels(path)
 
-    n_comp1 = []
-    n_comp10 = []
-    n_comp20 = []
-    n_comp40 = []
-    for threshold in [0.5, 0.8, 0.9, 0.95, 0.98, 0.99]:
-        n_comp1.append(find_the_number_of_important_components(path, 1, threshold))
-        n_comp10.append(find_the_number_of_important_components(path, 10, threshold))
-        n_comp20.append(find_the_number_of_important_components(path, 20, threshold))
-        n_comp40.append(find_the_number_of_important_components(path, 40, threshold))
-    print(n_comp1)
-    print(n_comp10)
-    print(n_comp20)
-    print(n_comp40)
-    # 99% 1: 12, 10: 62, 20: 116, 40: 223
-    # 98% 1: 11, 10: 44, 20: 79, 40: 150
-    # 97% 1: 9, 10: 34, 20: 61, 40: 113
-    test_pca(path, 1, n_comp1)
-    test_pca(path, 10, n_comp10)
-    test_pca(path, 20, n_comp20)
-    test_pca(path, 40, n_comp40)
+    # n_comp1 = []
+    # n_comp10 = []
+    # n_comp20 = []
+    # n_comp40 = []
+    # for threshold in [0.5, 0.8, 0.9, 0.95, 0.98, 0.99]:
+    #     n_comp1.append(find_the_number_of_important_components(path, 1, threshold))
+    #     n_comp10.append(find_the_number_of_important_components(path, 10, threshold))
+    #     n_comp20.append(find_the_number_of_important_components(path, 20, threshold))
+    #     n_comp40.append(find_the_number_of_important_components(path, 40, threshold))
+    # print(n_comp1)
+    # print(n_comp10)
+    # print(n_comp20)
+    # print(n_comp40)
+    # # 99% 1: 12, 10: 62, 20: 116, 40: 223
+    # # 98% 1: 11, 10: 44, 20: 79, 40: 150
+    # # 97% 1: 9, 10: 34, 20: 61, 40: 113
+    # test_pca(path, 1, n_comp1)
+    # test_pca(path, 10, n_comp10)
+    # test_pca(path, 20, n_comp20)
+    # test_pca(path, 40, n_comp40)
 
     #print(find_best_result(SvmModel({})))
     #print(find_best_result(RFModel({})))
@@ -247,6 +247,27 @@ if __name__ == '__main__':
     #create_hyper_parameter_test_graph(load_hyper_parameter_test_results(SvmModel({})))
     #print(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
     #get_table(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
+    # print(load_kernel_test_results())
+    # print(get_table(load_kernel_test_results()))
+    # print(find_best_result(SvmModel({}), 1))
+    # print(find_best_result(RFModel({}), 1))
+    # print(find_best_result(SvmModel({}), 10))
+    # print(find_best_result(RFModel({}), 10))
+    # print(find_best_result(SvmModel({}), 20))
+    # print(find_best_result(RFModel({}), 20))
+    # print(find_best_result(SvmModel({}), 40))
+    # print(find_best_result(RFModel({}), 40))
+    svm = SvmModel({'svc__C': [math.pow(2, 3), math.pow(2, 7), math.pow(2, 11)],
+                    'svc__gamma': [math.pow(2, 3), math.pow(2, -3), math.pow(2, -9), math.pow(2, -15)]})
+    rf = RFModel({'randomforestclassifier__n_estimators': [100, 300, 500], 'randomforestclassifier__max_depth': [50, 100, 300]})
+    test_hyper_parameters(svm, path, 1, "center_norm", MinMaxScaler(), False, None)
+    test_hyper_parameters(rf, path, 1, None, StandardScaler(), True, 1*18)
+    test_hyper_parameters(svm, path, 10, "center_norm", MinMaxScaler(), False, None)
+    test_hyper_parameters(rf, path, 10, None, MinMaxScaler(), True, 10*18)
+    test_hyper_parameters(svm,path,20,None, StandardScaler(),True,20*18)
+    test_hyper_parameters(rf,path, 20, "center_norm", StandardScaler(), True, 116)
+    test_hyper_parameters(svm,path,40,None, MinMaxScaler(),True,40*18)
+    test_hyper_parameters(rf, path, 40, None, StandardScaler(), True, 223)
 
 
 
