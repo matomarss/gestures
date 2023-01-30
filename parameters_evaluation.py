@@ -1,25 +1,11 @@
-import argparse
 import os
-import pickle
 
-import joblib
 import numpy as np
 from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
-from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.linear_model import SGDClassifier
-from sklearn.metrics import accuracy_score, classification_report, f1_score, confusion_matrix
-from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
-from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, OneHotEncoder
-from sklearn.svm import SVC
-
-from numba import jit, cuda
+from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 import math
-import json
-
-from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
 from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond, test_model
 from files_organization import dump_to_json, dump_object
@@ -184,7 +170,6 @@ def test_hyper_parameters(mod, root_path, n, preprocessing, scaler, use_pca, n_c
         os.makedirs(dir)
     filename = mod.get_name() + "_hyper_par_test_n=" + str(n)
     dump_to_json(dir, filename, data)
-    #dump_object(dir, filename, model)
 
 
 if __name__ == '__main__':
@@ -217,9 +202,9 @@ if __name__ == '__main__':
 
     #print(find_best_result(SvmModel({})))
     #print(find_best_result(RFModel({})))
-    for model in [RFModel({}), SvmModel({})]:
-        for n in [1, 10, 20, 40]:
-            create_pca_test_graphs(n, model)
+    # for model in [RFModel({}), SvmModel({})]:
+    #     for n in [1, 10, 20, 40]:
+    #         create_pca_test_graphs(n, model)
     #test_hyper_parameters(RFModel({'randomforestclassifier__n_estimators': [100,300,500], 'randomforestclassifier__max_depth': [50,100,300]}), path, 20, "center_norm", StandardScaler(), True, 116)
     #test_hyper_parameters(SvmModel({'svc__C': [math.pow(2, 3),  math.pow(2, 7),  math.pow(2, 11)], 'svc__gamma': [math.pow(2, 3),  math.pow(2, -3),  math.pow(2, -9), math.pow(2, -15)]}), path, 20, None, StandardScaler(), True, 20*18)
 

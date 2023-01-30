@@ -1,23 +1,14 @@
 import argparse
 import os
-import pickle
 
-import joblib
 import numpy as np
-from matplotlib import pyplot as plt
 from sklearn.decomposition import PCA
 from sklearn.ensemble import RandomForestClassifier, AdaBoostClassifier
-from sklearn.linear_model import SGDClassifier
 from sklearn.metrics import accuracy_score, classification_report, f1_score, confusion_matrix
-from sklearn.neighbors import NearestNeighbors, KNeighborsClassifier
 from sklearn.pipeline import make_pipeline
-from sklearn.preprocessing import MinMaxScaler, StandardScaler, OneHotEncoder
 from sklearn.svm import SVC
 
-from numba import jit, cuda
-
 import math
-import json
 
 from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
@@ -46,12 +37,6 @@ class SvmModel(Model):
     def get_file_name(self, n, p, params):
         return 'SVM_k_{}_n{}_p{}_C{}_g{}.joblib'.format(params.get("svc_kernel"), n, p, params.get("svc__C"), params.get("svc__gamma"))
 
-    # def get_hyper_parameters(self):
-    #     hyp_params = {'svc__C': [math.pow(2, -3),math.pow(2, 3),math.pow(2, 7)], 'svc__kernel': ["rbf"]}
-    #     #hyp_params = {'svc__C': [math.pow(2, 3),  math.pow(2, 7)], 'svc__gamma': [0.135, 0.250]}
-    #     #hyp_params = {'svc__C': [math.pow(2, -5),  math.pow(2, -1),  math.pow(2, 3),  math.pow(2, 7),  math.pow(2, 11), math.pow(2, 15)], 'svc__gamma': [math.pow(2, 5),  math.pow(2, 1),  math.pow(2, -3),  math.pow(2, -7),  math.pow(2, -11), math.pow(2, -15)]}
-    #     return hyp_params
-
     def get_model(self, params):
         if len(params) == 0:
             svm = SVC(kernel="rbf")
@@ -78,12 +63,6 @@ class RFModel(Model):
 
     def get_file_name(self, n, p, params):
         return 'RF_n{}_p{}_est{}_d{}.joblib'.format(n, p, params.get("randomforestclassifier__n_estimators"), params.get("randomforestclassifier__max_depth"))
-
-    # def get_hyper_parameters(self):
-    #     #hyp_params = dict(randomforestclassifier__n_estimators=[100], randomforestclassifier__max_depth=[150])
-    #     #hyp_params = {'randomforestclassifier__n_estimators': [100, 300, 600, 1000], 'randomforestclassifier__max_depth': [50, 100, 225, 500]}
-    #     hyp_params = {'randomforestclassifier__max_depth': [50]}
-    #     return hyp_params
 
     def get_model(self, params):
         if len(params) == 0:
@@ -320,57 +299,7 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 
         print(f"->{name} = {best_val}")
 
-    # print("Fitting of the best model in progress...")
-    # got_model = mod.get_model(best_params)
-    #
-    # pipeline = make_pipeline(scaler, pca, got_model)
-    # pipeline.fit(train_X, train_y)
-    #
-    # test_predict = pipeline.predict(test_X)
-    #
-    # acc = accuracy_score(test_y, test_predict)
-    # cm = confusion_matrix(test_y, test_predict)
-    #
-    # print("Accuracy of the best model: {}".format(acc))
-    # print("Confusion matrix of the best model:")
-    # print(cm)
-
     return search.cv_results_, [search.best_params_, search.best_score_]
-
-
-        # if not os.path.exists('models'):
-        #     os.makedirs('models')
-        #
-        # joblib.dump(pipeline, os.path.join('models', mod.get_file_name(i, preprocessing, best_params)))
-        #
-        # if not os.path.exists('results'):
-        #     os.makedirs('results')
-        #
-        # filename = dump_to_json(mod, preprocessing, scaler, pca, acc, i, search.best_params_.get("svc__kernel"), search.best_params_.get("pca__n_components"))
-        # joblib.dump(search.cv_results_, os.path.join('results', filename) + ".joblib")
-        # joblib.dump(pipeline,           os.path.join('models', filename) + ".joblib")
-
-
-# def dump_to_json(model, preprocessing, scaler, pca, accuracy, length, kernel, n_components):
-#     # Create a dictionary to store the information
-#     data = {
-#         "kernel": str(kernel),
-#         "model": str(model),
-#         "preprocessing": str(preprocessing),
-#         "scaler": str(scaler),
-#         "pca": str(pca),
-#         "length": length,
-#         "accuracy": accuracy
-#     }
-#
-#     # Create a filename based on the parameter names and values
-#     filename = f"kernel_{kernel}_model_{model}_preprocessing_{preprocessing}_scaler_{scaler}_pca_{pca}_len_{length}_n_components_{n_components}_acc_{accuracy}"
-#     path = os.path.join('results', filename) + ".json"
-#     # Save the dictionary to a JSON file
-#     with open(path, "w") as f:
-#         json.dump(data, f)
-#
-#     return filename
 
 
 def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_components):
@@ -413,103 +342,6 @@ def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_componen
     print(cm)
     return cm
 
-# def print_difference(val_y, val_predict):
-#     print("val_predict ----- val_y")
-#     for i in range(len(val_y)):
-#         print(val_predict[i], "-----", val_y[i])
-#
-#
-# def train_and_evaluate_linear_classification(root_path, n=1):
-#     # cond_val = lambda x: '2' in x
-#     # cond_train = lambda x: '0' in x or '1' in x
-#     cond_val = lambda x: 'jano' in x or 'zuzka' in x or 'iveta' in x # or 'stefan' in x or 'palo' in x
-#     # cond_val = lambda x: 'viktor' in x #or 'zuzka' in x or 'iveta' in x or 'stefan' in x or 'palo' in x
-#     cond_train = lambda x: not cond_val(x)
-#
-#     train_X, train_y = load_data(root_path, cond_train, n=n)
-#     val_X, val_y = load_data(root_path, cond_val, n=n)
-#
-#     print(f"Loaded data with {len(train_X)} training samples and {len(val_X)} test samples")
-#
-#     sgd = SGDClassifier()
-#     sgd.fit(train_X, train_y)
-#
-#     val_predict = sgd.predict(val_X)
-#
-#     print_difference(val_y, val_predict)
-#
-#     acc = accuracy_score(val_y, val_predict)
-#
-#     print("Accuracy: {}".format(acc))
-#     print(classification_report(val_y, val_predict))
-
 
 if __name__ == '__main__':
     args = parse_args()
-
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=True, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=True, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=True, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(), use_pca=True, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(), use_pca=True, cv=5)
-
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=False, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=False, cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=False, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=False, cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=False,
-    #                    cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=False,
-    #                    cv=5)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(), use_pca=False,
-    #                    cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(),
-    #                    use_pca=False, cv=5)
-
-    #train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=False, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=MinMaxScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=False, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing=None, scaler=StandardScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=False, cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=True, cv=5)
-    #
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(), use_pca=False,
-    #                    cv=5)
-    # train_and_evaluate("svm", args.root_path, n=[20], preprocessing="center_norm", scaler=StandardScaler(), use_pca=True,
-    #                    cv=5)
-
-    # test_model("svm", args.root_path, n=40, preprocessing=None, scaler=MinMaxScaler(), use_pca=True, hyp_params={'svc__C': 2048, 'svc__gamma': 0.00048828125})
-    # test_model("svm", args.root_path, n=40, preprocessing=None, scaler=MinMaxScaler(), use_pca=True, hyp_params={'svc__C': math.pow(2, 3), 'svc__gamma': 0.125})
-
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing="center_norm", scaler=None, use_pca=False)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing="center_norm", scaler=None, use_pca=False)
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=False)
-    #train_and_evaluate("svm", args.root_path, n=[40], preprocessing="center_norm", scaler=MinMaxScaler(), use_pca=False, cv=10)
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing=None, scaler=MinMaxScaler(), use_pca=False)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing=None, scaler=MinMaxScaler(), use_pca=False)
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing=None, scaler=MinMaxScaler(), use_pca=True)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing=None, scaler=MinMaxScaler(), use_pca=True)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing="center_norm", scaler=StandardScaler(), use_pca=False)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing="center_norm", scaler=StandardScaler(), use_pca=False)
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing=None, scaler=StandardScaler(), use_pca=False)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing=None, scaler=StandardScaler(), use_pca=False)
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing=None, scaler=StandardScaler(), use_pca=True)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing=None, scaler=StandardScaler(), use_pca=True)
-    #
-    # train_and_evaluate("rf", args.root_path, n=[10, 30, 50], preprocessing="center_norm", scaler=None, use_pca=True)
-    # train_and_evaluate("svm", args.root_path, n=[40], preprocessing="center_norm", scaler=None, use_pca=True)
-
-
-    #train_and_evaluate(args.model, args.root_path, n=args.num_frames, preprocessing=args.preprocessing)

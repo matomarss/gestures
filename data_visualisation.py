@@ -1,7 +1,5 @@
 import os
 
-from mpl_toolkits import mplot3d
-
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
