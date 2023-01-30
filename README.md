@@ -22,6 +22,6 @@ test_svm_kernels obsahuje výsledky validácie pri testovaní pre výber kernelu
 test_hyper_parameters obsahuje výsledky testovania hyperparametrov modelov SVM a RF pre dané n a danú najúspešnejšiu kombináciu škálovania, predspracovania a PCA
 
 
-Súbor obsahujúci spracovávané dáta záznamov gest je možné nájsť tu: 
+Súbor obsahujúci spracovávané dáta záznamov gest je možné nájsť tu: http://cogsci.dai.fmph.uniba.sk/~kocur/gestures/
 
 Pre správne fungovanie metód spúšťaných vo funkcii main v súbore parameters_evaluation.py je potrebné umiestniť súbor s dátami do priečinka, ktorý obsahuje aj priečinok s kódom z tejto stránky a premenovať ho na "gestures".
