@@ -1,0 +1,184 @@
+{
+    "all": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.8012701452359077
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8046801962269828
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7899947020863893
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7856016033442408
+        }
+    ],
+    "5": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.3833527088672889
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.44970878669181297
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.6231311636603962
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.6410314919590997
+        }
+    ],
+    "12": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.6787935801752718
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.6927599120954699
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7077756607615886
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7290849439313098
+        }
+    ],
+    "23": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7745221077743927
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7680965015501503
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7720343665876814
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7734107280064049
+        }
+    ],
+    "42": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7882898270387028
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7896016893144414
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7847518308966154
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7802273052103315
+        }
+    ],
+    "79": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7953698169372042
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.797337438410411
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7850780233301631
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7802264455083258
+        }
+    ],
+    "116": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.798385436648022
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8012054526599718
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7892736485215812
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7843560455856988
+        }
+    ]
+}

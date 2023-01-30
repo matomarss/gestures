@@ -1,0 +1,184 @@
+{
+    "all": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7978945301739058
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8067117625259387
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7834688484964593
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8078657898857692
+        }
+    ],
+    "6": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.5126919911370807
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.49133946183207533
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7005539834052945
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.6987356107489561
+        }
+    ],
+    "21": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7229601647581769
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.738046659064638
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7214852421117064
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7612933775052643
+        }
+    ],
+    "39": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7686355513389999
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7722585735971828
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.743985175024992
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.772503822244324
+        }
+    ],
+    "75": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.793112623138089
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7930287562530762
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7566796118549528
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.779674016313451
+        }
+    ],
+    "150": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.8078699679444392
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8166057111684264
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7804185599556515
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8110790227147122
+        }
+    ],
+    "223": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.8080341690469712
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8306167799667861
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.8047349633197021
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.8258332424690493
+        }
+    ]
+}

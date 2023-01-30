@@ -1,0 +1,91 @@
+{
+    "results": [
+        {
+            "max_depth": "50",
+            "n_estimators": "100",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8097801370302818
+        },
+        {
+            "max_depth": "50",
+            "n_estimators": "300",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.822092449183233
+        },
+        {
+            "max_depth": "50",
+            "n_estimators": "500",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8235794645973264
+        },
+        {
+            "max_depth": "100",
+            "n_estimators": "100",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8103150727118766
+        },
+        {
+            "max_depth": "100",
+            "n_estimators": "300",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8219736846527536
+        },
+        {
+            "max_depth": "100",
+            "n_estimators": "500",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8255421572513848
+        },
+        {
+            "max_depth": "300",
+            "n_estimators": "100",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8123972374598967
+        },
+        {
+            "max_depth": "300",
+            "n_estimators": "300",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.822508478821652
+        },
+        {
+            "max_depth": "300",
+            "n_estimators": "500",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 180,
+            "validation_accuracy": 0.8247094434783253
+        }
+    ],
+    "best_parameters": {
+        "best_score": 0.8255421572513848,
+        "pca__n_components": 180,
+        "randomforestclassifier__max_depth": 100,
+        "randomforestclassifier__n_estimators": 500
+    }
+}

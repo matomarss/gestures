@@ -1,0 +1,40 @@
+{
+    "NO_PCA": [
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.6663370167227466
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.6667765466333491
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "None",
+            "scaler": "None",
+            "validation_accuracy": 0.6691372835683549
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7006484474834525
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7023503113952054
+        },
+        {
+            "max_depth": "50",
+            "preprocessing": "center_norm",
+            "scaler": "None",
+            "validation_accuracy": 0.7026246296447514
+        }
+    ]
+}

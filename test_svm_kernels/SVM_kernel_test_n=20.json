@@ -1,0 +1,224 @@
+{
+    "linear": [
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7170874800522269
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7275111304544063
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7123663190246681
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7298054816749143
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7373522037923605
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7321027343896922
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7302697852356926
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7165630618286937
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7275767042248981
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7298054816749143
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7320371176341001
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7165630618286937
+        }
+    ],
+    "poly": [
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7195118397085609
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7259364572754969
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7233799399283224
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7286245520146578
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7452760127020972
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7479647307252123
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.740422414580546
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7499957552213463
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7728849127671121
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7286245520146578
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7705887561723918
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7499957552213463
+        }
+    ],
+    "rbf": [
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7882897840536025
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.8012701452359077
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7903229148196507
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.8046801962269828
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7842273696879819
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7899947020863893
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 42,
+            "validation_accuracy": 0.7802929864435739
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": 360,
+            "validation_accuracy": 0.7856016033442408
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7979915641740681
+        },
+        {
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.8046801962269828
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7957651509045677
+        },
+        {
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "pca": "None",
+            "validation_accuracy": 0.7856016033442408
+        }
+    ]
+}

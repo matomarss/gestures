@@ -1,0 +1,117 @@
+{
+    "results": [
+        {
+            "C": "8.0",
+            "gamma": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6927454212746699
+        },
+        {
+            "C": "8.0",
+            "gamma": "0.125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6748463513473203
+        },
+        {
+            "C": "8.0",
+            "gamma": "0.001953125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.627087390430138
+        },
+        {
+            "C": "8.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.19460913717208134
+        },
+        {
+            "C": "128.0",
+            "gamma": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6828639530332445
+        },
+        {
+            "C": "128.0",
+            "gamma": "0.125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6834098174234875
+        },
+        {
+            "C": "128.0",
+            "gamma": "0.001953125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6480013245859239
+        },
+        {
+            "C": "128.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.5046148380741919
+        },
+        {
+            "C": "2048.0",
+            "gamma": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6840166079451653
+        },
+        {
+            "C": "2048.0",
+            "gamma": "0.125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6920298556123
+        },
+        {
+            "C": "2048.0",
+            "gamma": "0.001953125",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6548642676073356
+        },
+        {
+            "C": "2048.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "pca": false,
+            "n_components": null,
+            "validation_accuracy": 0.6436655052936733
+        }
+    ],
+    "best_parameters": {
+        "best_score": 0.6927454212746699,
+        "svc__C": 8.0,
+        "svc__gamma": 8.0
+    }
+}

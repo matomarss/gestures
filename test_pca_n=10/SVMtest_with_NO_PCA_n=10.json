@@ -1,0 +1,40 @@
+{
+    "NO_PCA": [
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.7822982652489217
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7814064522360156
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "None",
+            "scaler": "None",
+            "validation_accuracy": 0.7811686755278379
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "MinMaxScaler()",
+            "validation_accuracy": 0.790451448497427
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "StandardScaler()",
+            "validation_accuracy": 0.7870607335345998
+        },
+        {
+            "C": "8.0",
+            "preprocessing": "center_norm",
+            "scaler": "None",
+            "validation_accuracy": 0.7770693711158081
+        }
+    ]
+}

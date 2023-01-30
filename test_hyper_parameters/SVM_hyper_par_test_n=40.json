@@ -1,0 +1,118 @@
+{
+    "results": [
+        {
+            "C": "8.0",
+            "gamma": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.20235737619274233
+        },
+        {
+            "C": "8.0",
+            "gamma": "0.125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7815741838094452
+        },
+        {
+            "C": "8.0",
+            "gamma": "0.001953125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7735732693920517
+        },
+        {
+            "C": "8.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.583655162738782
+        },
+        {
+            "C": "128.0",
+            "gamma": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.20235737619274233
+        },
+        {
+            "C": "128.0",
+            "gamma": "0.125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7815741838094452
+        },
+        {
+            "C": "128.0",
+            "gamma": "0.001953125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7485984990918667
+        },
+        {
+            "C": "128.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7410950453998726
+        },
+        {
+            "C": "2048.0",
+            "gamma": "8.0",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.20235737619274233
+        },
+        {
+            "C": "2048.0",
+            "gamma": "0.125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7815741838094452
+        },
+        {
+            "C": "2048.0",
+            "gamma": "0.001953125",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7631056698973591
+        },
+        {
+            "C": "2048.0",
+            "gamma": "3.0517578125e-05",
+            "preprocessing": "None",
+            "scaler": "MinMaxScaler()",
+            "pca": true,
+            "n_components": 720,
+            "validation_accuracy": 0.7416753879395411
+        }
+    ],
+    "best_parameters": {
+        "best_score": 0.7815741838094452,
+        "pca__n_components": 720,
+        "svc__C": 8.0,
+        "svc__gamma": 0.125
+    }
+}
