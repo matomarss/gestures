@@ -21,10 +21,10 @@ import json
 
 from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
-from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond
+from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond, test_model
 from files_organization import dump_to_json, dump_object
-from data_extraction import find_best_result, load_pca_test_results, load_kernel_test_results, load_hyper_parameter_test_results, load_preprocessing_and_scaler_table_data
-from data_visualisation import create_pca_test_graphs, create_hyper_parameter_test_graph, get_table
+from data_extraction import find_best_result, load_pca_test_results, load_kernel_test_results_for_pca_table, load_hyper_parameter_test_results, load_preprocessing_and_scaler_table_data
+from data_visualisation import create_pca_test_graphs, create_hyper_parameter_test_graph, get_table, visualize_data, visualize_confusion_matrix
 
 
 def test_svm_kernels(root_path):
@@ -217,30 +217,9 @@ if __name__ == '__main__':
 
     #print(find_best_result(SvmModel({})))
     #print(find_best_result(RFModel({})))
-    # res_rf1 = load_pca_test_results(1, RFModel({}))
-    # res_rf10 = load_pca_test_results(10, RFModel({}))
-    # res_rf20 = load_pca_test_results(20, RFModel({}))
-    # res_rf40 = load_pca_test_results(40, RFModel({}))
-    # res_svm1 = load_pca_test_results(1, SvmModel({}))
-    # res_svm10 = load_pca_test_results(10, SvmModel({}))
-    # res_svm20 = load_pca_test_results(20, SvmModel({}))
-    # res_svm40 = load_pca_test_results(40, SvmModel({}))
-    # create_pca_test_graphs(res_rf1)
-    # create_pca_test_graphs(res_rf10)
-    # create_pca_test_graphs(res_rf20)
-    # create_pca_test_graphs(res_rf40)
-    # create_pca_test_graphs(res_svm1)
-    # create_pca_test_graphs(res_svm10)
-    # create_pca_test_graphs(res_svm20)
-    # create_pca_test_graphs(res_svm40)
-    # print(res_rf1)
-    # print(res_rf10)
-    # print(res_rf20)
-    # print(res_rf40)
-    # print(res_svm1)
-    # print(res_svm10)
-    # print(res_svm20)
-    # print(res_svm40)
+    for model in [RFModel({}), SvmModel({})]:
+        for n in [1, 10, 20, 40]:
+            create_pca_test_graphs(n, model)
     #test_hyper_parameters(RFModel({'randomforestclassifier__n_estimators': [100,300,500], 'randomforestclassifier__max_depth': [50,100,300]}), path, 20, "center_norm", StandardScaler(), True, 116)
     #test_hyper_parameters(SvmModel({'svc__C': [math.pow(2, 3),  math.pow(2, 7),  math.pow(2, 11)], 'svc__gamma': [math.pow(2, 3),  math.pow(2, -3),  math.pow(2, -9), math.pow(2, -15)]}), path, 20, None, StandardScaler(), True, 20*18)
 
@@ -248,26 +227,28 @@ if __name__ == '__main__':
     #print(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
     #get_table(load_preprocessing_and_scaler_table_data(SvmModel({}), 20, "all"))
     # print(load_kernel_test_results())
-    # print(get_table(load_kernel_test_results()))
-    # print(find_best_result(SvmModel({}), 1))
-    # print(find_best_result(RFModel({}), 1))
-    # print(find_best_result(SvmModel({}), 10))
-    # print(find_best_result(RFModel({}), 10))
-    # print(find_best_result(SvmModel({}), 20))
-    # print(find_best_result(RFModel({}), 20))
-    # print(find_best_result(SvmModel({}), 40))
-    # print(find_best_result(RFModel({}), 40))
-    svm = SvmModel({'svc__C': [math.pow(2, 3), math.pow(2, 7), math.pow(2, 11)],
-                    'svc__gamma': [math.pow(2, 3), math.pow(2, -3), math.pow(2, -9), math.pow(2, -15)]})
-    rf = RFModel({'randomforestclassifier__n_estimators': [100, 300, 500], 'randomforestclassifier__max_depth': [50, 100, 300]})
-    test_hyper_parameters(svm, path, 1, "center_norm", MinMaxScaler(), False, None)
-    test_hyper_parameters(rf, path, 1, None, StandardScaler(), True, 1*18)
-    test_hyper_parameters(svm, path, 10, "center_norm", MinMaxScaler(), False, None)
-    test_hyper_parameters(rf, path, 10, None, MinMaxScaler(), True, 10*18)
-    test_hyper_parameters(svm,path,20,None, StandardScaler(),True,20*18)
-    test_hyper_parameters(rf,path, 20, "center_norm", StandardScaler(), True, 116)
-    test_hyper_parameters(svm,path,40,None, MinMaxScaler(),True,40*18)
-    test_hyper_parameters(rf, path, 40, None, StandardScaler(), True, 223)
-
+    #print(get_table(load_kernel_test_results_for_pca_table("None")))
+    #print(find_best_result(SvmModel({}), 1))
+    #print(find_best_result(RFModel({}), 1))
+    #print(find_best_result(SvmModel({}), 10))
+    #print(find_best_result(RFModel({}), 10))
+    #print(find_best_result(SvmModel({}), 20))
+    #print(find_best_result(RFModel({}), 20))
+    #print(find_best_result(SvmModel({}), 40))
+    #print(find_best_result(RFModel({}), 40))
+    # svm = SvmModel({'svc__C': [math.pow(2, 3), math.pow(2, 7), math.pow(2, 11)],
+    #                 'svc__gamma': [math.pow(2, 3), math.pow(2, -3), math.pow(2, -9), math.pow(2, -15)]})
+    # rf = RFModel({'randomforestclassifier__n_estimators': [100, 300, 500], 'randomforestclassifier__max_depth': [50, 100, 300]})
+    # test_hyper_parameters(svm, path, 1, "center_norm", MinMaxScaler(), False, None)
+    # test_hyper_parameters(rf, path, 1, None, StandardScaler(), True, 1*18)
+    # test_hyper_parameters(svm, path, 10, "center_norm", MinMaxScaler(), False, None)
+    # test_hyper_parameters(rf, path, 10, None, MinMaxScaler(), True, 10*18)
+    # test_hyper_parameters(svm,path,20,None, StandardScaler(),True,20*18)
+    # test_hyper_parameters(rf,path, 20, "center_norm", StandardScaler(), True, 116)
+    # test_hyper_parameters(svm,path,40,None, MinMaxScaler(),True,40*18)
+    # test_hyper_parameters(rf, path, 40, None, StandardScaler(), True, 223)
+    #create_hyper_parameter_test_graph()
+    #visualize_data(path)
+    #visualize_confusion_matrix(test_model(mod=RFModel({'randomforestclassifier__n_estimators': 500, 'randomforestclassifier__max_depth': 300}), root_path=path, preprocessing="center_norm",n=20, scaler=StandardScaler(), use_pca=True,pca_n_components=116))
 
 

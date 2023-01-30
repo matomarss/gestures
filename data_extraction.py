@@ -141,12 +141,14 @@ def load_pca_test_results(n, mod):
     return final
 
 
-def load_kernel_test_results():
+def load_kernel_test_results_for_pca_table(pca):
     results = load_from_json("test_svm_kernels", "SVM_kernel_test_n=20")
     processed_results = {}
     for kernel in results.keys():
         processed_results[kernel] = {}
         for rec in results.get(kernel):
+            if rec.get("pca") != pca:
+                continue
             compound = ""
             for key in rec.keys():
                 if key != "validation_accuracy":
