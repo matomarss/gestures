@@ -1,9 +1,16 @@
+import os
+
 from mpl_toolkits import mplot3d
 
 import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
+import matplotlib
+import seaborn as sns
+
+from data_extraction import load_pca_test_results, load_hyper_parameter_test_results
+from train_classifier import SvmModel, RFModel
 
 
 def parse_args():
@@ -19,7 +26,17 @@ def load_features(file_path):
     return features
 
 
-def visualize(file_path):
+def load_targets(file_path):
+    data = np.load(file_path)
+    targets = data['targets']
+    return targets
+
+
+def get_gesture_num(file_path):
+    return np.argmax(load_targets(file_path), axis=-1)[0]
+
+
+def visualize_data(file_path):
     features = load_features(file_path)
     first_frame = features[0]
 
@@ -88,16 +105,17 @@ def create_pca_best_test_graph(accuracies):
     plt.show()
 
 
-def create_pca_test_graphs(data):
+def create_pca_test_graphs(n, model):
+    data = load_pca_test_results(n, model)
     for prep in ["None", "center_norm"]:
         x = []
         y_stand = []
         y_minmax = []
         plt.clf()
         if prep == "None":
-            plt.title("Without additional preprocessing")
+            plt.title("Bez vlastného predspracovania")
         elif prep == "center_norm":
-            plt.title("With central-normalized preprocessing")
+            plt.title("S center-norm predspracovaním")
         for point in data.keys():
             if point == -1:
                 pass
@@ -111,45 +129,77 @@ def create_pca_test_graphs(data):
                         elif rec.get("scaler") == "MinMaxScaler()":
                             y_minmax.append(rec.get("validation_accuracy"))
 
-        plt.scatter(x, y_stand, color="orange", label="With PCA and standard scaler")
+        plt.scatter(x, y_stand, color="orange", label="S použitím PCA a štandardného škálovania")
         #plt.plot(x, y_stand, color="green", label="With PCA and standard scaler")
-        plt.scatter(x, y_minmax, color="green", label="With PCA and minmax scaler")
+        plt.scatter(x, y_minmax, color="green", label="S použitím PCA a min-max škálovania")
         #plt.plot(x, y_minmax, color="orange", label="With PCA and minmax scaler")
 
         records = data.get(-1)
         for rec in records:
             if rec.get("preprocessing") == prep:
                 if rec.get("scaler") == "StandardScaler()":
-                    plt.axhline(y=rec.get("validation_accuracy"), color='orange', linestyle='-', label="Without PCA and with standard scaler")
+                    plt.axhline(y=rec.get("validation_accuracy"), color='orange', linestyle='-', label="S použitím štandardného škálovania bez PCA")
                 elif rec.get("scaler") == "MinMaxScaler()":
-                    plt.axhline(y=rec.get("validation_accuracy"), color='green', linestyle='-', label="Without PCA and with minmax scaler")
+                    plt.axhline(y=rec.get("validation_accuracy"), color='green', linestyle='-', label="S použitím min-max škálovania bez PCA")
                 elif rec.get("scaler") == "None":
-                    plt.axhline(y=rec.get("validation_accuracy"), color='black', linestyle='-', label="Without PCA and any scaler")
+                    plt.axhline(y=rec.get("validation_accuracy"), color='black', linestyle='-', label="Bez PCA a škálovania")
 
         plt.xticks(x, x)
-        plt.xlabel("Number of components left after PCA")
-        plt.ylabel("Best accuracy acquired")
+        plt.tick_params(axis='x', labelsize=6)
+        plt.xlabel("Počet ponechaných komponentov po PCA")
+        plt.ylabel("Validačná presnosť")
         plt.legend()
-        plt.show()
+        #matplotlib.use("pgf")
+        #plt.show()
+
+        graph_direc = "graphs"
+        if not os.path.exists(graph_direc):
+            os.makedirs(graph_direc)
 
 
-def create_hyper_parameter_test_graph(data):
-    x = []
-    y = []
+        filename = model.get_name() + f"_major_graph_{prep}_n=" + str(n) + ".jpg"
+        plt.savefig(os.path.join(graph_direc, filename), dpi=200, quality=100, format='jpg')
 
-    plt.title("Graph of the best acquired accuracy for every sequence length")
-    for n in data.keys():
-        x.append(int(n))
-        val_acc = data.get(n)
-        y.append(val_acc)
 
-    plt.scatter(x, y, color="red")
-    plt.plot(x, y, color="red")
+def create_hyper_parameter_test_graph():
+    #matplotlib.use("pgf")
+    plt.clf()
+    for model in [SvmModel({}), RFModel({})]:
+        data = load_hyper_parameter_test_results(model)
 
-    plt.xticks(x, x)
-    plt.xlabel("Sequence length")
-    plt.ylabel("Best accuracy acquired")
-    plt.show()
+        x = []
+        y = []
+
+        plt.title("Graf vývoja najlepšej dosiahnutej validačnej presnosti vzhľadom na dĺžku sekvencie", fontsize = 8)
+        for n in data.keys():
+            x.append(int(n))
+            val_acc = data.get(n)
+            y.append(val_acc)
+
+        if model.get_name() == "SVM":
+            color = "red"
+            label = "Metóda podporných vektorov (SVM)"
+        else:
+            color = "blue"
+            label = "Náhodný les (Random forest)"
+        plt.scatter(x, y, color=color)
+        plt.plot(x, y, color=color, label=label)
+
+        # for i, point in enumerate(zip(x, y)):
+        #     plt.annotate(f'({x[i]})', xy=point, xytext=(-10, 4), textcoords='offset points')
+
+        plt.xticks(x, x)
+        plt.xlabel("Dĺžka sekvencie")
+        plt.ylabel("Najlepšia dosiahnutá validačná presnosť")
+    plt.legend()
+    #plt.show()
+    graph_direc = "graphs"
+    if not os.path.exists(graph_direc):
+        os.makedirs(graph_direc)
+
+    filename = "Final_graph.jpg"
+
+    plt.savefig(os.path.join(graph_direc, filename), dpi=200, quality=100, format='jpg')
 
 
 def get_table(data):
@@ -162,6 +212,28 @@ def get_table(data):
     print(tabulate(tabular_data, headers=cols, tablefmt='latex'))
 
 
+def visualize_confusion_matrix(cm):
+    labels = ['ukázať', 'uchopiť', 'mávať', 'pýtať si', 'ok', 'nič']
+    # plot the confusion matrix as a heatmap
+    sns.heatmap(cm, annot=True, fmt='d', xticklabels=labels, yticklabels=labels)
+
+    # add labels and title
+    plt.xlabel('Skutočné gesto')
+    plt.ylabel('Predikované gesto')
+    plt.title('Matica zámen')
+
+    graph_direc = "graphs"
+    if not os.path.exists(graph_direc):
+        os.makedirs(graph_direc)
+
+    filename = "cm.jpg"
+
+    plt.savefig(os.path.join(graph_direc, filename), dpi=200, quality=100, format='jpg')
+
+    # show the plot
+    # plt.show()
+
+
 if __name__ == '__main__':
     args = parse_args()
-    visualize(args.file_path)
+    print(get_gesture_num(args.file_path))
