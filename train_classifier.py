@@ -373,51 +373,45 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 #     return filename
 
 
-# def test_model(mod, root_path, preprocessing, n, scaler, use_pca, hyp_params):
-#     if mod == "svm":
-#         m = SvmModel()
-#     elif mod == "rf":
-#         m = RFModel()
-#     else:
-#         raise Exception("Incorrect MODEL selected")
-#
-#     print(f"---Training {m.get_name()} classifier---")
-#     print(f"Preprocessing = {preprocessing}")
-#     print(f"Scaler = {scaler}")
-#
-#     if use_pca:
-#         pca = PCA()
-#         print(f"PCA used")
-#     else:
-#         pca = None
-#         print(f"PCA NOT used")
-#
-#     print("Hyperparameters:")
-#     for name in hyp_params.keys():
-#         print(f"->{name} = {hyp_params.get(name)}")
-#
-#     print(f"--n = {n}--")
-#
-#     train_X, train_y = load_data(root_path, train_cond, n=n, preprocessing=preprocessing)
-#     test_X, test_y = load_data(root_path, test_cond, n=n, preprocessing=preprocessing)
-#
-#     print(f"Loaded data with {len(train_X)} training samples and {len(test_X)} testing samples")
-#
-#     print("Fitting of the model in progress...")
-#     got_model = m.get_model(hyp_params)
-#
-#     pipeline = make_pipeline(scaler, pca, got_model)
-#     pipeline.fit(train_X, train_y)
-#
-#     test_predict = pipeline.predict(test_X)
-#
-#     acc = accuracy_score(test_y, test_predict)
-#     cm = confusion_matrix(test_y, test_predict)
-#
-#     print("Accuracy of the model: {}".format(acc))
-#     print("Confusion matrix of the model:")
-#     print(cm)
+def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_components):
+    print(f"---Training {mod.get_name()} classifier---")
+    print(f"Preprocessing = {preprocessing}")
+    print(f"Scaler = {scaler}")
 
+    if use_pca:
+        pca = PCA(n_components=pca_n_components)
+        print(f"PCA used")
+    else:
+        pca = None
+        print(f"PCA NOT used")
+
+    hyp_params = mod.get_hyper_parameters()
+    print("Hyperparameters:")
+    for name in hyp_params.keys():
+        print(f"->{name} = {hyp_params.get(name)}")
+
+    print(f"--n = {n}--")
+
+    train_X, train_y = load_data(root_path, train_cond, n=n, preprocessing=preprocessing)
+    test_X, test_y = load_data(root_path, test_cond, n=n, preprocessing=preprocessing)
+
+    print(f"Loaded data with {len(train_X)} training samples and {len(test_X)} testing samples")
+
+    print("Fitting of the model in progress...")
+    got_model = mod.get_model(hyp_params)
+
+    pipeline = make_pipeline(scaler, pca, got_model)
+    pipeline.fit(train_X, train_y)
+
+    test_predict = pipeline.predict(test_X)
+
+    acc = accuracy_score(test_y, test_predict)
+    cm = confusion_matrix(test_y, test_predict)
+
+    print("Accuracy of the model: {}".format(acc))
+    print("Confusion matrix of the model:")
+    print(cm)
+    return cm
 
 # def print_difference(val_y, val_predict):
 #     print("val_predict ----- val_y")
