@@ -128,8 +128,8 @@ def visualize_confusion_matrix(cm):
     sns.heatmap(cm, annot=True, fmt='d', xticklabels=labels, yticklabels=labels)
 
     # add labels and title
-    plt.xlabel('Skutočné gesto')
-    plt.ylabel('Predikované gesto')
+    plt.xlabel('Predikované gesto')
+    plt.ylabel('Skutočné gesto')
     plt.title('Matica zámen')
 
     graph_direc = "graphs"
