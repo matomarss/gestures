@@ -7,10 +7,10 @@ from sklearn.preprocessing import MinMaxScaler, StandardScaler
 
 import math
 
-from train_classifier import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond, test_model
+from training_and_testing import train_and_evaluate, parse_args, SvmModel, RFModel, load_data, true_cond, test_model
 from files_organization import dump_to_json, dump_object
-from data_extraction import find_highest_accuracy_at_preprocessing_experiment, load_preprocessing_experiment_results, load_kernel_experiment_results_for_pca_table, load_best_accuracies_after_hyper_parameter_search
-from results_visualisation import create_preprocessing_experiment_graphs, create_classifiers_comparison_graph, get_table, visualize_confusion_matrix
+from results_extraction import find_highest_accuracy_at_preprocessing_experiment, load_preprocessing_experiment_results, load_kernel_experiment_results_for_pca_table, load_best_accuracies_after_hyper_parameter_search
+from results_visualization import create_preprocessing_experiment_graphs, create_classifiers_comparison_graph, get_table, visualize_confusion_matrix
 
 
 def run_svm_kernel_experiment(root_path):
@@ -237,7 +237,7 @@ if __name__ == '__main__':
     """
 
     # Change this line to where the dataset is localized in your device
-    gestures_path = "C:\Users\matom\OneDrive\Počítač\skola3\gestures_recognition\gestures\prepped"
+    gestures_path = "C:\\Users\\matom\\OneDrive\\Počítač\\skola3\\gestures_recognition\\gestures\\prepped"
 
     # Run the experiment to search for the optimal SVM kernel
     run_svm_kernel_experiment(gestures_path)

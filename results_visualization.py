@@ -6,8 +6,8 @@ from tabulate import tabulate
 import matplotlib
 import seaborn as sns
 
-from data_extraction import load_preprocessing_experiment_results, load_best_accuracies_after_hyper_parameter_search, load_kernel_experiment_results_for_pca_table
-from train_classifier import SvmModel, RFModel
+from results_extraction import load_preprocessing_experiment_results, load_best_accuracies_after_hyper_parameter_search, load_kernel_experiment_results_for_pca_table
+from training_and_testing import SvmModel, RFModel
 
 
 def create_preprocessing_experiment_graphs(n, model):
