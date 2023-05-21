@@ -1,7 +1,53 @@
 from files_organization import dump_to_json, dump_object, load_from_json
 
 
-def find_best_result(mod, n):
+def load_kernel_experiment_results_for_pca_table(pca):
+    """
+        For the given pca, load all corresponding results for every kernel and preprocessing for a table generation
+    """
+    results = load_from_json("test_svm_kernels", "SVM_kernel_test_n=20")
+    processed_results = {}
+    for kernel in results.keys():
+        processed_results[kernel] = {}
+        for rec in results.get(kernel):
+            if rec.get("pca") != pca:
+                continue
+            prep = ""
+            for key in rec.keys():
+                if key != "validation_accuracy":
+                    prep += "&"+str(rec.get(key))
+            processed_results[kernel][prep] = rec["validation_accuracy"]
+    return processed_results
+
+
+def load_preprocessing_experiment_results(n, mod):
+    """
+    Load all results from the preprocessing experiment
+    """
+    results = {}
+
+    direc = "test_pca_n=" + str(n)
+    filename_no_pca = mod.get_name() + "test_with_NO_PCA_n=" + str(n)
+    filename_pca = mod.get_name() + "test_with_PCA_n=" + str(n)
+    data = load_from_json(direc, filename_pca)
+    results[n*18] = data.get("all")
+    for n_comp in data.keys():
+        if n_comp == "all":
+            continue
+        results[int(n_comp)] = data.get(n_comp)
+
+    data = load_from_json(direc, filename_no_pca)
+    results[-1] = data.get("NO_PCA")
+
+    results = dict(sorted(results.items()))
+
+    return results
+
+
+def find_highest_accuracy_at_preprocessing_experiment(mod, n):
+    """
+    Finds the highest validation accuracy achieved by the given model at the given sequence length from all preprocessing combinations
+    """
     best_result = {"validation_accuracy": 0}
     direc = "test_pca_n=" + str(n)
     filename_no_pca = mod.get_name() + "test_with_NO_PCA_n=" + str(n)
@@ -30,7 +76,10 @@ def find_best_result(mod, n):
     return best_result
 
 
-def load_pca_test_results_average(n, mod):
+def load_preprocessing_experiment_average_accuracies(n, mod):
+    """
+        For each component left after PCA or for NO PCA load average validation accuracy achieved (for a given model and sequence length)
+    """
     accuracies = {}
 
     direc = "test_pca_n="+str(n)
@@ -67,7 +116,10 @@ def load_pca_test_results_average(n, mod):
     return accuracies
 
 
-def load_pca_best_test_results(n, mod):
+def load_preprocessing_experiment_best_accuracies(n, mod):
+    """
+        For each component left after PCA or for NO PCA load best validation accuracy achieved (for a given model and sequence length)
+    """
     accuracies = {}
 
     direc = "test_pca_n=" + str(n)
@@ -96,44 +148,10 @@ def load_pca_best_test_results(n, mod):
     return accuracies
 
 
-def load_pca_test_results(n, mod):
-    final = {}
-
-    direc = "test_pca_n=" + str(n)
-    filename_no_pca = mod.get_name() + "test_with_NO_PCA_n=" + str(n)
-    filename_pca = mod.get_name() + "test_with_PCA_n=" + str(n)
-    data = load_from_json(direc, filename_pca)
-    final[n*18] = data.get("all")
-    for n_comp in data.keys():
-        if n_comp == "all":
-            continue
-        final[int(n_comp)] = data.get(n_comp)
-
-    data = load_from_json(direc, filename_no_pca)
-    final[-1] = data.get("NO_PCA")
-
-    final = dict(sorted(final.items()))
-
-    return final
-
-
-def load_kernel_test_results_for_pca_table(pca):
-    results = load_from_json("test_svm_kernels", "SVM_kernel_test_n=20")
-    processed_results = {}
-    for kernel in results.keys():
-        processed_results[kernel] = {}
-        for rec in results.get(kernel):
-            if rec.get("pca") != pca:
-                continue
-            compound = ""
-            for key in rec.keys():
-                if key != "validation_accuracy":
-                    compound += "&"+str(rec.get(key))
-            processed_results[kernel][compound] = rec["validation_accuracy"]
-    return processed_results
-
-
-def load_hyper_parameter_test_results(mod):
+def load_best_accuracies_after_hyper_parameter_search(mod):
+    """
+        For the given model, load the best validation accuracy achieved for every sequence length for its best set of hyperparameters
+    """
     results = {}
     direc = "test_hyper_parameters"
     for n in [1, 10, 20, 40]:
@@ -142,18 +160,3 @@ def load_hyper_parameter_test_results(mod):
         results[n] = data.get("best_parameters").get("best_score")
     return results
 
-
-def load_preprocessing_and_scaler_table_data(mod, n, pca):
-    res = load_pca_test_results(n, mod)
-
-    if pca == "all":
-        pca = n*18
-    if pca is None:
-        pca = -1
-    ld = {}
-    for prep in ["None", "center_norm"]:
-        ld[prep] = {}
-        for rec in res.get(pca):
-            if prep == rec.get("preprocessing"):
-                ld[prep][rec.get("scaler")] = rec.get("validation_accuracy")
-    return ld

@@ -14,10 +14,17 @@ from sklearn.model_selection import GridSearchCV, PredefinedSplit
 
 
 class Model:
+    """
+    Class that represents a classification model. It contains information about its possible hyperparameter value to be
+    used in experiments and other useful information.
+    """
     def __init__(self, hyp_params):
         self.hyp_params = hyp_params
 
-    def get_model(self, params):
+    def get_model(self, hyperparams):
+        """
+        Creates a sklearn model with the given hyperparameters
+        """
         pass
 
     def get_name(self):
@@ -37,22 +44,22 @@ class SvmModel(Model):
     def get_file_name(self, n, p, params):
         return 'SVM_k_{}_n{}_p{}_C{}_g{}.joblib'.format(params.get("svc_kernel"), n, p, params.get("svc__C"), params.get("svc__gamma"))
 
-    def get_model(self, params):
-        if len(params) == 0:
+    def get_model(self, hyperparams):
+        if len(hyperparams) == 0:
             svm = SVC(kernel="rbf")
         else:
-            if params.get("svc__C") is None:
+            if hyperparams.get("svc__C") is None:
                 C=1
             else:
-                C = params.get("svc__C")
-            if params.get("svc__gamma") is None:
+                C = hyperparams.get("svc__C")
+            if hyperparams.get("svc__gamma") is None:
                gamma="scale"
             else:
-                gamma = params.get("svc__gamma")
-            if params.get("svc__kernel") is None:
+                gamma = hyperparams.get("svc__gamma")
+            if hyperparams.get("svc__kernel") is None:
                kernel="rbf"
             else:
-                kernel = params.get("svc__kernel")
+                kernel = hyperparams.get("svc__kernel")
             svm = SVC(kernel=kernel, C=C, gamma=gamma)
         return svm
 
@@ -64,15 +71,15 @@ class RFModel(Model):
     def get_file_name(self, n, p, params):
         return 'RF_n{}_p{}_est{}_d{}.joblib'.format(n, p, params.get("randomforestclassifier__n_estimators"), params.get("randomforestclassifier__max_depth"))
 
-    def get_model(self, params):
-        if len(params) == 0:
+    def get_model(self, hyperparams):
+        if len(hyperparams) == 0:
             forest = RandomForestClassifier()
         else:
-            if params.get("randomforestclassifier__n_estimators") is None:
+            if hyperparams.get("randomforestclassifier__n_estimators") is None:
                 n_estimators = 100
             else:
-                n_estimators = params.get("randomforestclassifier__n_estimators")
-            forest = RandomForestClassifier(n_estimators=n_estimators, max_depth=params.get("randomforestclassifier__max_depth"))
+                n_estimators = hyperparams.get("randomforestclassifier__n_estimators")
+            forest = RandomForestClassifier(n_estimators=n_estimators, max_depth=hyperparams.get("randomforestclassifier__max_depth"))
         return forest
 
 
@@ -87,18 +94,24 @@ def parse_args():
 
 
 def create_seq_data(features, targets, n=5):
-    np.set_printoptions(threshold=np.inf)
-
+    """
+    Creates a data for the given sequence length.
+    :param features: feature vectors of the dataset
+    :param targets: targets of the dataset
+    :param n: sequence length
+    :return: new data for the given sequence length
+    """
     features = np.column_stack([features[i: len(features) - n + i, :] for i in range(n)])
     targets = targets[n:]
 
     return features, targets
 
 
-debugbol = False
-
-
-def make_preprocessing(features, targets, preprocessing, n):
+def make_preprocessing(features, targets, preprocessing):
+    """
+    Perform the given preprocessing on the given data.
+    :return: preprocessed data
+    """
     if preprocessing == "center":
         new_features = []
         for i in range(len(features)):
@@ -111,8 +124,8 @@ def make_preprocessing(features, targets, preprocessing, n):
                 new_features[i].append(features[i][j+1] - palm_co_y)
                 new_features[i].append(features[i][j+2] - palm_co_z)
         new_features = np.array(new_features)
-
         return new_features, targets
+
     if preprocessing == "track":
         new_features = [0]*24
         previous = []
@@ -128,9 +141,8 @@ def make_preprocessing(features, targets, preprocessing, n):
             previous = features[i]
         new_targets = targets[:1]
         return new_features, new_targets
-    if preprocessing == "distance":
-        global debugbol
 
+    if preprocessing == "distance":
         new_features = []
         for i in range(len(features)):
             frame_vector = []
@@ -139,19 +151,11 @@ def make_preprocessing(features, targets, preprocessing, n):
                 for k in range((j+1)*3, len(features[i]), 3):
                     other_feature_vector = features[i][k:k+3]
                     frame_vector.append(math.dist(feature_vector, other_feature_vector))
-                    if not debugbol:
-                        print(feature_vector)
-                        print(other_feature_vector)
-                        print(math.dist(feature_vector, other_feature_vector))
-            if not debugbol:
-                print(features[i])
-                print(frame_vector)
-                debugbol = True
 
             new_features.append(frame_vector)
         new_features = np.array(new_features)
-
         return new_features, targets
+
     if preprocessing == "distance2":
         new_features = []
         for i in range(len(features)):
@@ -164,11 +168,10 @@ def make_preprocessing(features, targets, preprocessing, n):
             new_features.append(frame_vector)
         new_features = np.array(new_features)
         return new_features, targets
+
     if preprocessing == "center_norm":
         new_features = []
-        #print(features[0])
         for i in range(len(features)):
-
             palm_co_x = features[i][0]
             palm_co_y = features[i][1]
             palm_co_z = features[i][2]
@@ -182,19 +185,26 @@ def make_preprocessing(features, targets, preprocessing, n):
                 new_features[i].append((features[i][j + 1] - palm_co_y)/normalizer)
                 new_features[i].append((features[i][j + 2] - palm_co_z)/normalizer)
         new_features = np.array(new_features)
-        #print(new_features[0])
-
         return new_features, targets
+
     raise Exception("Incorrect PREPROCESSING")
 
 
 def allows_sequencing(preprocessing):
+    """
+    :return: whether the given preprocessing is applicable to data created for sequences
+    """
     if preprocessing in {None, "center", "distance", "distance2", "center_norm"}:
         return True
     return False
 
 
 def load_data(root_path, cond, preprocessing=None, n=5):
+    """
+    Load the data at "root_path" that satisfy the given condition. Apply preprocessing and create sequences if requested.
+
+    :return loaded data
+    """
     participant_dir = [f for f in os.listdir(root_path) if cond(f)]
 
     feature_list = []
@@ -209,7 +219,7 @@ def load_data(root_path, cond, preprocessing=None, n=5):
             targets = data['targets']
 
             if preprocessing is not None:
-                features, targets = make_preprocessing(features, targets, preprocessing, n=n)
+                features, targets = make_preprocessing(features, targets, preprocessing)
             if allows_sequencing(preprocessing):
                 features, targets = create_seq_data(features, targets, n=n)
 
@@ -224,24 +234,17 @@ def load_data(root_path, cond, preprocessing=None, n=5):
     return features, targets
 
 
-def get_multi_pred(y_true, y_pred_single, n=5):
-    y_pred_single_one_hot = np.zeros([len(y_pred_single), 6])
-    for i, pred in enumerate(y_pred_single):
-        y_pred_single_one_hot[i, pred] = 1
-    y_pred_multi = np.array([y_pred_single_one_hot[i: len(y_pred_single) - n + i, :] for i in range(n)])
-    y_pred_multi = np.sum(y_pred_multi, axis=0)
-    y_pred = np.argmax(y_pred_multi, axis=-1)
-
-    y_true = y_true[n:]
-
-    print(f1_score(y_true, y_pred, average='weighted'))
-
-
 def test_cond(x):
+    """
+    :return: is this recording supposed to be in the testing set
+    """
     return '2_zuzka' in x or '2_stefan' in x or '2_palo' in x
 
 
 def train_cond(x):
+    """
+    :return: is this recording supposed to be in the training/validation set
+    """
     return not test_cond(x)
 
 
@@ -249,7 +252,21 @@ def true_cond(x):
     return True
 
 
-def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=None, pca_n_components_to_try=None):
+def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=5, pca_n_components_to_try=None):
+    """
+    Train and evaluate the given model on the dataset at "root_path".
+
+    :param mod: model to be trained containing the hyperparameters to be evaluated
+    :param root_path: path to the dataset
+    :param preprocessing: preprocessing to be applied to the training data
+    :param n: length of the sequence of frames corresponding to one gesture
+    :param scaler: scaling to be performed on the data
+    :param use_pca: whether to use PCA
+    :param cv: how many folds to use in cross-validation
+    :param pca_n_components_to_try: number of principal components left after PCA if used
+    :return: cross-validation results as described in sklearn
+    """
+
     print(f"---Training {mod.get_name()} classifier---")
     print(f"Preprocessing = {preprocessing}")
     print(f"Scaler = {scaler}")
@@ -265,6 +282,7 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 
     print(f"--Trying n = {n}--")
 
+    # load the data
     train_X, train_y = load_data(root_path, train_cond, n=n, preprocessing=preprocessing)
     test_X, test_y = load_data(root_path, test_cond, n=n, preprocessing=preprocessing)
 
@@ -272,8 +290,10 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 
     got_model = mod.get_model({})
 
+    # make pipeline that applies scaling and PCA before applying the classification model
     pipeline = make_pipeline(scaler, pca, got_model)
 
+    # created the set of hyperparameters to be searched in gridsearch
     hyp_params = mod.get_hyper_parameters()
     if use_pca:
         if pca_n_components_to_try is None:
@@ -281,14 +301,8 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
         else:
             hyp_params["pca__n_components"] = pca_n_components_to_try
 
-    if cv is None:
-        split_n = 14 / 15
-        split = PredefinedSplit(
-            [0] * math.ceil(len(train_X) * (1 - split_n)) + [-1] * math.floor(len(train_X) * split_n))
-    else:
-        split = cv
-    search = GridSearchCV(pipeline, hyp_params, verbose=3, cv=split, n_jobs=-1)
-
+    # perform gridsearch for the optimal hyperparameters with the given pipeline and cv-fold cross-validation
+    search = GridSearchCV(pipeline, hyp_params, verbose=3, cv=cv, n_jobs=-1)
     search.fit(train_X, train_y)
 
     print("Accuracy after the validation of the best model: {}".format(search.best_score_))
@@ -303,6 +317,19 @@ def train_and_evaluate(mod, root_path, preprocessing, n, scaler, use_pca, cv=Non
 
 
 def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_components):
+    """
+    Train the given model on the training set and then test the given model on the testing set created from the dataset
+    at "root_path".
+
+    :param mod: The model to be trained and tested with the given hyperparameters
+    :param root_path: path to the dataset
+    :param preprocessing: preprocessing to be applied to the data
+    :param n: length of the sequence of frames corresponding to one gesture
+    :param scaler: scaling to be performed on the data
+    :param use_pca: whether to use PCA
+    :param pca_n_components: number of principal components left after PCA if used
+    :return: confusion matrix of the classification at the testing set
+    """
     print(f"---Training {mod.get_name()} classifier---")
     print(f"Preprocessing = {preprocessing}")
     print(f"Scaler = {scaler}")
@@ -327,11 +354,15 @@ def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_componen
     print(f"Loaded data with {len(train_X)} training samples and {len(test_X)} testing samples")
 
     print("Fitting of the model in progress...")
+    # get the model with the given hyperparameters and create a pipeline that will apply preprocessing to the data
+    # before using the model
     got_model = mod.get_model(hyp_params)
-
     pipeline = make_pipeline(scaler, pca, got_model)
+
+    # train the model on the preprocessed training data
     pipeline.fit(train_X, train_y)
 
+    # test the model on the preprocessed testing data
     test_predict = pipeline.predict(test_X)
 
     acc = accuracy_score(test_y, test_predict)
@@ -339,7 +370,6 @@ def test_model(mod, root_path, preprocessing, n, scaler, use_pca, pca_n_componen
 
     print("Accuracy of the model: {}".format(acc))
     print("Confusion matrix of the model:")
-    print(cm)
     return cm
 
 

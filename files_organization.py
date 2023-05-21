@@ -2,6 +2,7 @@ import os
 import joblib
 import json
 
+
 def dump_to_json(path, filename, data):
     path = os.path.join(path, filename) + ".json"
     with open(path, "w") as f:

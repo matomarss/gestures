@@ -1,110 +1,20 @@
 import os
 
-import argparse
 import numpy as np
 import matplotlib.pyplot as plt
 from tabulate import tabulate
 import matplotlib
 import seaborn as sns
 
-from data_extraction import load_pca_test_results, load_hyper_parameter_test_results
+from data_extraction import load_preprocessing_experiment_results, load_best_accuracies_after_hyper_parameter_search, load_kernel_experiment_results_for_pca_table
 from train_classifier import SvmModel, RFModel
 
 
-def parse_args():
-    parser = argparse.ArgumentParser()
-    parser.add_argument('file_path', help='path to the individual data files in .npz format')
-    args = parser.parse_args()
-    return args
-
-
-def load_features(file_path):
-    data = np.load(file_path)
-    features = data['features']
-    return features
-
-
-def load_targets(file_path):
-    data = np.load(file_path)
-    targets = data['targets']
-    return targets
-
-
-def get_gesture_num(file_path):
-    return np.argmax(load_targets(file_path), axis=-1)[0]
-
-
-def visualize_data(file_path):
-    features = load_features(file_path)
-    first_frame = features[0]
-
-    palm = first_frame[:3]
-    fingers = first_frame[3:]
-
-    fig = plt.figure()
-    ax = plt.axes(projection='3d')
-    ax.scatter3D(fingers[0::3], fingers[1::3], fingers[2::3])
-    ax.scatter3D(palm[0], palm[1], palm[2])
-
-    for i in range(5):
-        x = np.array([palm[0], fingers[i*3]])
-        y = np.array([palm[1], fingers[i*3+1]])
-        z = np.array([palm[2], fingers[i*3+2]])
-        ax.plot(x, y, z, 'gray')
-
-    show_targets(file_path)
-
-    plt.show()
-
-
-def show_targets(file_path):
-    data = np.load(file_path)
-    targets = data['targets']
-    print(targets)
-
-
-def create_pca_test_graph_average(accuracies):
-    x = []
-    y = []
-    accuracies = dict(sorted(accuracies.items()))
-    for point in accuracies.keys():
-        if point == -1 or point == -2:
-            pass
-        else:
-            x.append(int(point))
-            y.append(accuracies.get(point))
-    plt.scatter(x, y)
-    plt.plot(x, y)
-
-    plt.axhline(y=accuracies.get(-1), color='r', linestyle='-')
-    plt.axhline(y=accuracies.get(-2), color='g', linestyle='-')
-    plt.show()
-
-
-def create_pca_best_test_graph(accuracies):
-    x = []
-    y = []
-    accuracies = dict(sorted(accuracies.items()))
-    for point in accuracies.keys():
-        if point == -1:
-            pass
-        else:
-            x.append(int(point))
-            y.append(accuracies.get(point))
-    plt.scatter(x, y)
-    plt.plot(x, y, label="With PCA")
-
-    plt.xticks(x, x)
-    plt.xlabel("Number of components left after PCA")
-    plt.ylabel("Best accuracy acquired")
-
-    plt.axhline(y=accuracies.get(-1), color='r', linestyle='-', label="Without PCA")
-    plt.legend()
-    plt.show()
-
-
-def create_pca_test_graphs(n, model):
-    data = load_pca_test_results(n, model)
+def create_preprocessing_experiment_graphs(n, model):
+    """
+    Create graphs for the results of the experiment on preprocessing combinations
+    """
+    data = load_preprocessing_experiment_results(n, model)
     for prep in ["None", "center_norm"]:
         x = []
         y_stand = []
@@ -128,9 +38,7 @@ def create_pca_test_graphs(n, model):
                             y_minmax.append(rec.get("validation_accuracy"))
 
         plt.scatter(x, y_stand, color="orange", label="S použitím PCA a štandardného škálovania")
-        #plt.plot(x, y_stand, color="green", label="With PCA and standard scaler")
         plt.scatter(x, y_minmax, color="green", label="S použitím PCA a min-max škálovania")
-        #plt.plot(x, y_minmax, color="orange", label="With PCA and minmax scaler")
 
         records = data.get(-1)
         for rec in records:
@@ -154,16 +62,15 @@ def create_pca_test_graphs(n, model):
         if not os.path.exists(graph_direc):
             os.makedirs(graph_direc)
 
-
         filename = model.get_name() + f"_major_graph_{prep}_n=" + str(n) + ".jpg"
         plt.savefig(os.path.join(graph_direc, filename), dpi=200, quality=100, format='jpg')
 
 
-def create_hyper_parameter_test_graph():
+def create_classifiers_comparison_graph():
     #matplotlib.use("pgf")
     plt.clf()
     for model in [SvmModel({}), RFModel({})]:
-        data = load_hyper_parameter_test_results(model)
+        data = load_best_accuracies_after_hyper_parameter_search(model)
 
         x = []
         y = []
@@ -175,10 +82,10 @@ def create_hyper_parameter_test_graph():
             y.append(val_acc)
 
         if model.get_name() == "SVM":
-            color = "red"
+            color = "orange"
             label = "Metóda podporných vektorov (SVM)"
         else:
-            color = "blue"
+            color = "green"
             label = "Náhodný les (Random forest)"
         plt.scatter(x, y, color=color)
         plt.plot(x, y, color=color, label=label)
@@ -189,6 +96,11 @@ def create_hyper_parameter_test_graph():
         plt.xticks(x, x)
         plt.xlabel("Dĺžka sekvencie")
         plt.ylabel("Najlepšia dosiahnutá validačná presnosť")
+
+    # Best average validation accuracy achieved by DeepGRU
+    plt.axhline(y=0.8074679224679225, color='blue', linestyle='-',
+                label="DeepGRU")
+
     plt.legend()
     #plt.show()
     graph_direc = "graphs"
@@ -233,5 +145,15 @@ def visualize_confusion_matrix(cm):
 
 
 if __name__ == '__main__':
-    args = parse_args()
-    print(get_gesture_num(args.file_path))
+    print(get_table(load_kernel_experiment_results_for_pca_table("None")))
+    print(get_table(load_kernel_experiment_results_for_pca_table(42)))
+    print(get_table(load_kernel_experiment_results_for_pca_table(360)))
+
+    for n in [1, 10, 20, 40]:
+        for mod in [SvmModel({}), RFModel({})]:
+            create_preprocessing_experiment_graphs(n, mod)
+
+    create_classifiers_comparison_graph()
+
+
+
