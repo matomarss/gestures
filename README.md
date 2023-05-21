@@ -15,7 +15,7 @@ The following files are runnable and can be run in order to conduct all the expe
 2. results_visualization.py
 3. frames_visualization.py
 
-In order for the above runnable files to work, it is necessary to download the following dataset and set and use its location path where needed (experiment_evaluation.py and frames_visualization.py):
+In order for the above runnable files to work, it is necessary to download the dataset that is part of the electronic attachment of the thesis and use its location path where needed (experiment_evaluation.py and frames_visualization.py). It is also available at the following webpage:
 ```
 http://cogsci.dai.fmph.uniba.sk/~kocur/gestures/
 ```
