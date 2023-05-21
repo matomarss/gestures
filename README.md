@@ -1,27 +1,28 @@
-Popis súborov:
+# Gesture Recognition Using Machine Learning: SVM and Random Forest
+This code was made as part of the bachelor thesis Gesture Recognition Using Machine Learning in 2023 at Comenius University in Bratislava, Slovakia.
+It is a modification of the code received form my supervisor Ing. Viktor Kocur, PhD.
 
-data_extraction.py -> extrakcia zaznamenaných dát z ich formátov
+The main files written as part of this thesis are: 
+1. experiment_evaluation.py - code executing all the experiments using models SVM and RF in our thesis
+2. training_and_testing.py - code performing all training and testing in our thesis on top of loading data and creating sequences and preprocessing
+3. results_extraction.py - code for extraction of results from .json files
+4. files_organization.py - code that stores and loads from the .json/.joblib files
+5. results_visualization.py - code for results visualization
+6. frames_visualization.py - code for visualization of frames of gestures
 
-data_visualization.py -> vizualizácia dát (grafy, matice, tabuľky)
+The following files are runnable and can be run in order to conduct all the experiments required for the thesis and generate the results visualization or frames visualization:
+1. experiment_evaluation.py
+2. results_visualization.py
+3. frames_visualization.py
 
-files_organization.py -> pomocné metódy pre ukladanie/načítavanie súborov
+In order for the above runnable files to work, it is necessary to download the following dataset and set and use its location path where needed (experiment_evaluation.py and frames_visualization.py):
+```
+http://cogsci.dai.fmph.uniba.sk/~kocur/gestures/
+```
 
-parameters_evaluation-> metódy zabezpečujúce vyhľadávanie parametrov ako kernel, škálovanie, predspracovanie, PCA a iné hyperparametre
+Results:
+1. test_pca - folders containing the results of experiments on combinations of preprocessing for models SVM and Random Forest for different sequence length
 
-train_classifier-> metódy využívané v súbore parameters_evaluation.py zabezpečujúce trénovanie a testovanie modelov, grid_search a načítavanie dát
+2. test_svm_kernels - folder containing the result of kernel test for SVM
 
-Zvyšné .py súbory neboli mnou modifikované a pre projekt nie sú veľmi relevantné. 
-
-Main metóda súboru parameters_evaluation.py obsahuje v komentároch všetky/väčšinu metód, ktoré som spúšťal pri hľadaní parametrov, zaznamenávaní výsledkov, ich vizualizácii a vyhodnocovaní počas vypracovávania projektu.
-
-
-test_pca_... priečinky obsahujú výsledky validácie pre kombinácie škálovania, predspracovania, PCA a klasifikátorov pre dané n.
-
-test_svm_kernels obsahuje výsledky validácie pri testovaní pre výber kernelu pre porovnávané kombinácie
-
-test_hyper_parameters obsahuje výsledky testovania hyperparametrov modelov SVM a RF pre dané n a danú najúspešnejšiu kombináciu škálovania, predspracovania a PCA
-
-
-Súbor obsahujúci spracovávané dáta záznamov gest je možné nájsť tu: http://cogsci.dai.fmph.uniba.sk/~kocur/gestures/
-
-Pre správne fungovanie metód spúšťaných vo funkcii main v súbore parameters_evaluation.py je potrebné umiestniť súbor s dátami do priečinka, ktorý obsahuje aj priečinok s kódom z tejto stránky a premenovať ho na "gestures".
+3. test_hyper_parameters - folder containing results of hyperparameter tests on the best combinations of preprocessing for both SVM and RF
